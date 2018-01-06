@@ -14,7 +14,7 @@
 
 
 
-
+// TODO: Split header and cpp methods
 namespace TSP {
     using size_type = std::size_t;
     using NodeId = size_type;
@@ -25,12 +25,12 @@ namespace TSP {
             throw std::runtime_error("Loops are not contained in this instace");
         if (i>j)
             std::swap(i,j);
-        return (i)*(N-1) +j -1;
+        return (i)*(N) +j;
     }
 
     void to_NodeId(EdgeId e , NodeId & i, NodeId & j, size_type N) {
-        i = e/(N-1);
-        j = e % (N-1) +1;
+        j = e % (N);
+        i = (e - j)/(N) ;
     }
 
     template <class dist_type>
@@ -49,17 +49,40 @@ namespace TSP {
         std::vector<EdgeId> sorted(tsp.num_edges());
         for (size_type index = 0 ; index < tsp.num_edges(); index++)
             sorted[index] = index;
+
         for (auto const & el : bn.get_required()) {
             tree.push_back(el);
             to_NodeId(el,i,j,tsp.size());
             uf._union(i,j);
         }
+
+        std::vector<dist_type> mod_weights;
+        mod_weights.reserve(tsp.num_edges());
+        for (size_t lauf = 0; lauf < tsp.weights().size(); lauf++) {
+            NodeId index1= 0, index2 = 0;
+            to_NodeId(lauf, index1 , index2 , tsp.size());
+            mod_weights.push_back(tsp.weight(lauf) + lambda[index1] + lambda[index2]);
+        }
         std::stable_sort(sorted.begin(), sorted.end(),
-                         [&](EdgeId ind1, EdgeId ind2) {return (tsp.weight(ind1) < tsp.weight(ind2));} );
-
-
-    return;
-
+                         [&](EdgeId ind1, EdgeId ind2) {
+                           return (mod_weights[ind1] <
+                             mod_weights[ind2]);} );
+        std::vector<EdgeId> candidates;
+        candidates.reserve(tsp.size());
+        for (auto it = sorted.begin(); (it != sorted.end()) && (tree.size() != tsp.size()-1); it++) {
+            to_NodeId(*it, i, j, tsp.size());
+            if ((i == 0) && (0 != j))
+                candidates.push_back(*it);
+            if ((i != j) && (i != 0) && (0 != j)) {
+                if (uf._find(i) != uf._find(j)) {
+                    tree.push_back(*it);
+                    uf._union(i, j);
+                }
+            }
+        }
+        tree.push_back(candidates[0]);
+        tree.push_back(candidates[1]);
+        return;
     }
 
     template <class dist_type>
@@ -117,7 +140,7 @@ namespace TSP {
                 std::stringstream strstr;
                 strstr << line;
                 strstr >> option;
-                // TODO
+                // TODO: Capture if EOF is missing
                 if (option != "EOF") {
                     try {
                         strstr >> coord_x >> coord_y;
@@ -133,9 +156,8 @@ namespace TSP {
             file.close();
             for (size_t i = 0; i < dimension; i++)
                 for (size_t j = 0; j < dimension; j++)
-                    if (i != j)
-                        this->_weights.push_back(
-                                distance(x[i], y[i], x[j], y[j])
+                    this->_weights.push_back(
+                        distance(x[i], y[i], x[j], y[j])
                         );
 
         }
@@ -173,6 +195,10 @@ namespace TSP {
 
         dist_type weight(EdgeId id) const {
             return _weights[id];
+        }
+
+        const std::vector<dist_type> &  weights() const {
+            return _weights;
         }
 
     private:
