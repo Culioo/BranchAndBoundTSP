@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     std::clock_t end = clock();
 
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << "reading, initializing and computing the matching took  s" << elapsed_secs << std::endl;
+    std::cerr << "reading, initializing and doing nothing  s" << elapsed_secs << std::endl;
     return EXIT_SUCCESS;
 }
 
