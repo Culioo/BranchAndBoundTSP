@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     std::string file = argv[2];
     std::clock_t begin = clock();
     TSP::Instance<double,double> myTSP(file);
-
+    myTSP.compute_optimal_tour();
     std::clock_t end = clock();
 
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;

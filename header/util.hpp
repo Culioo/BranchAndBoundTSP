@@ -20,10 +20,12 @@ public:
      */
     Union_Find(size_t number_of_elements) :
             parent(std::vector<size_t>(number_of_elements)),
+            rank(std::vector<size_t>(number_of_elements)),
             n(number_of_elements)
     {
         for (size_t id = 0; id<number_of_elements; id++) {
             parent[id] = id;
+            rank[id] = 0;
         }
     }
 

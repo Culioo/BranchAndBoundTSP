@@ -13,7 +13,7 @@ foreach (_headerFile ${BranchAndBoundTSP_HEADERS})
 endforeach()
 list(REMOVE_DUPLICATES BranchAndBoundTSP_INCLUDE_DIRS)
 
-set(GCC_COVERAGE_COMPILE_FLAGS "-std=c++14 -Wall -Wshadow  -Wextra -pedantic -Werror -march=native -g  ") #-O2
+set(GCC_COVERAGE_COMPILE_FLAGS "-std=c++14 -Wall -Wshadow  -Wextra -pedantic -march=native -g  ") #-O2 -Werror
 
 set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
 set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
