@@ -1,8 +1,12 @@
 #include <cstdlib>
 #include <fstream>
 #include <algorithm>
+#include <cmath>
 #include <string>
 #include <climits>
+#include <vector>
+#include "../src/util.cpp"
+#include <sstream>
 
 namespace TSP {
     //TODO: Adjust constructors
@@ -11,7 +15,7 @@ namespace TSP {
     using NodeId = size_type ;
 
 
-    template <class cood_type, class dist_type>
+    template <class coord_type, class dist_type>
         class Instance {
         public:
             Instance(const std::string &filename) {
@@ -30,7 +34,7 @@ namespace TSP {
                     strstr >> option;
 
                     if (option == "DIMENSION") {
-                        strstr >> dimnesion;
+                        strstr >> this->dimension;
                     }
 
                     if (option == "NODE_COORD_SECTION") {
@@ -40,21 +44,26 @@ namespace TSP {
 
                 if (!scan)
                     throw std::runtime_error("File not in right format");
-                std::vector<double> x(dimension), y(dimension);
+
+                std::vector<coord_type> x, y;
+                x.reserve(dimension), y.reserve(dimension);
+                //_nodes.reserve(dimension);
+                //_weights.reserve(dimension*(dimension-1));
+                //size_type id = std::numeric_limits<size_type>::max();
+                coord_type coord_x = std::numeric_limits<coord_type>::max() , coord_y = std::numeric_limits<coord_type>::max() ;
                 while (file.good()) {
                     getline(file, line);
                     std::stringstream strstr;
                     strstr << line;
                     strstr >> option;
                     if (option != "EOF") {
-                        size_type id = std::numeric_limits<size_type>;
-                        double x = std::numeric_limits<double> , y = std::numeric_limits<double> ;
                         try {
-                            strstr >> id >> coord_x >> coord_y;
-                            x.push_back(coord_x) , y.push_back(coord_y);
+                            strstr >> coord_x >> coord_y;
+                            std::cout << option << ' ' << coord_x << ' ' << coord_y << std::endl;
+                            _nodes.push_back(std::stoi(option)) , x.push_back(coord_x) , y.push_back(coord_y);
                         }
                         catch (int e) {
-                            cout << "An exception occurred while reading the file. Exception Nr. " << e << '\n';
+                            std::cerr << "An exception occurred while reading the file. Exception Nr. " << e << '\n';
                         }
                     }
                     else break;
@@ -63,16 +72,14 @@ namespace TSP {
                 for (size_t i = 0; i < dimension; i++)
                     for (size_t j = 0; j < dimension; j++)
                         if (i != j)
-                            _weights.push_back(
-                                    distance(x[i],y[i],x[j],y[j])
+                            this->_weights.push_back(
+                                    distance(x[i], y[i], x[j], y[j])
                             );
+
             }
 
-            dist_type distance(x1,y1,x2,y2) {
-                return std::lround(std::sqrt((_nodes[node1].x - _nodes[node2].x) * (_nodes[node1].x - _nodes[node2].x)
-                                             + (nodes[node1].y - _nodes[node2].y) * (_nodes[node1].y - _nodes[node2].y)
-                                            )
-                                  );
+            dist_type distance(coord_type x1,coord_type y1,coord_type x2,coord_type y2) {
+                return std::lround(std::sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
             }
 
         private:

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
-
+#include "../header/tsp.hpp"
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -13,8 +13,9 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-
+    std::string file = argv[2];
     std::clock_t begin = clock();
+    TSP::Instance<double,double> myTSP(file);
 
     std::clock_t end = clock();
 
