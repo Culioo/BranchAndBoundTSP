@@ -1,26 +1,74 @@
 #include <cstdlib>
 #include <fstream>
 #include <algorithm>
-namespace TSP {
-    using size_type = std::size_t;
+#include <string>
+#include <climits>
 
+namespace TSP {
+    //TODO: Adjust constructors
+
+    using size_type = std::size_t;
     using NodeId = size_type ;
+
 
     template <class cood_type, class dist_type>
         class Instance {
         public:
-            class Node {
-            public:
-            private:
-                friend Instance;
-                cood_type x,y;
-            };
+            Instance(const std::string &filename) {
+                std::ifstream file(filename);
 
-            Instance() {
+                if (!file.is_open())
+                    throw std::runtime_error("File " + filename + " could not be opened");
 
+                std::string line = "", option = "";
+                bool scan = false;
+                do {
+                    getline(file, line);
+                    stripColons(line);
+                    std::stringstream strstr;
+                    strstr << line;
+                    strstr >> option;
+
+                    if (option == "DIMENSION") {
+                        strstr >> dimnesion;
+                    }
+
+                    if (option == "NODE_COORD_SECTION") {
+                        scan = true;
+                    }
+                } while (!scan && file.good());
+
+                if (!scan)
+                    throw std::runtime_error("File not in right format");
+                std::vector<double> x(dimension), y(dimension);
+                while (file.good()) {
+                    getline(file, line);
+                    std::stringstream strstr;
+                    strstr << line;
+                    strstr >> option;
+                    if (option != "EOF") {
+                        size_type id = std::numeric_limits<size_type>;
+                        double x = std::numeric_limits<double> , y = std::numeric_limits<double> ;
+                        try {
+                            strstr >> id >> coord_x >> coord_y;
+                            x.push_back(coord_x) , y.push_back(coord_y);
+                        }
+                        catch (int e) {
+                            cout << "An exception occurred while reading the file. Exception Nr. " << e << '\n';
+                        }
+                    }
+                    else break;
+                }
+                file.close();
+                for (size_t i = 0; i < dimension; i++)
+                    for (size_t j = 0; j < dimension; j++)
+                        if (i != j)
+                            _weights.push_back(
+                                    distance(x[i],y[i],x[j],y[j])
+                            );
             }
 
-            dist_type distance(NodeId node1, NodeId node2) {
+            dist_type distance(x1,y1,x2,y2) {
                 return std::lround(std::sqrt((_nodes[node1].x - _nodes[node2].x) * (_nodes[node1].x - _nodes[node2].x)
                                              + (nodes[node1].y - _nodes[node2].y) * (_nodes[node1].y - _nodes[node2].y)
                                             )
@@ -29,59 +77,8 @@ namespace TSP {
 
         private:
             std::vector<NodeId> _nodes;
+            std::vector<dist_type> _weights;
+            size_type dimension;
+
         };
-    template <class cood_type, class dist_type>
-    Instance<cood_type, dist_type> read_instance(const std::string &filename) {
-        std::ifstream file(filename);
-
-        if (!file.is_open())
-            throw std::runtime_error("File " + filename + " could not be opened");
-
-        NodeId num_nodes = 0;
-        std::string line = "", option = "";
-        bool done = false;
-        do {
-            getline(file, line);
-            std::stringstream strstr;
-            strstr << line;
-            strstr >> option;
-
-            if (option == "p") {
-                strstr >> option;
-                if (option == "edge") {
-
-                    strstr >> num_nodes >> num_edges;
-
-                    done = true;
-                }
-            }
-        } while (!done && file.good());
-
-        if (!done)
-            throw std::runtime_error("File not in right format");
-
-        ED::Graph result{static_cast<ED::NodeId >(num_nodes)};
-        while (file.good()) {
-            getline(file, line);
-            std::stringstream strstr;
-            strstr << line;
-            strstr >> option;
-            if (option != "c") {
-                if (option == "e") {
-                    ED::DimacsId v = ED::invalid_dimacs_id, w = ED::invalid_dimacs_id;
-                    strstr >> v >> w;
-                    if (v == ED::invalid_dimacs_id || w == ED::invalid_dimacs_id)
-                        throw std::runtime_error("One node ID was out of bounds");
-                    result.add_edge(ED::from_dimacs_id(v), ED::from_dimacs_id(w));
-                }
-            }
-            option = "";
-        }
-        file.close();
-
-        return result;
-    }
-    };
-
-
 }
