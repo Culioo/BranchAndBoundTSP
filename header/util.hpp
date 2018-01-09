@@ -68,8 +68,7 @@ public:
      * Simple print function to display the current values of the union find structure.
      * This function was primarily used for debugging purposes.
      */
-    void print()
-    {
+    void print() {
         std::cout << "Union find assignment" << "\n";
         for (size_t id = 0; id < n; id++) {
             std::cout << id << ' ';

@@ -203,7 +203,36 @@ namespace TSP {
             }
         }
 
-        void print_optimal_tour(const std::string &filename);
+        void print_optimal_length() {
+            int length = 0;
+            for (int count = 0; count < this->size() - 1; count++) {
+                NodeId i = this->_tour.at(count);
+                NodeId j = this->_tour.at(count + 1);
+                EdgeId edge = i * this->size() + j;
+                length += this->_weights.at(edge);
+            }
+            NodeId i = this->_tour.at(this->size() - 1);
+            NodeId j = this->_tour.at(0);
+            EdgeId edge = i * this->size() + j;
+            length += this->_weights.at(edge);
+
+            std::cout << "The found tour is of length " << length << std::endl;
+        }
+
+        void print_optimal_tour(const std::string &filename) {
+            std::ofstream file_to_print;
+            file_to_print.open(filename, std::ios::out);
+
+
+            file_to_print << "TYPE : TOUR" << std::endl;
+            file_to_print << "DIMENSION : " << this->size() << std::endl;
+            file_to_print << "TOUR_SECTION" << std::endl;
+            for( int i = 0; i < this->size(); i++){
+                file_to_print << this->_tour.at(i) << std::endl;
+            }
+            file_to_print << "-1" << std::endl;
+            file_to_print << "EOF" << std::endl;
+        }
 
         size_type size() const {
             return  dimension;
@@ -225,7 +254,7 @@ namespace TSP {
         std::vector<NodeId> _nodes;
         std::vector<dist_type> _weights;
         size_type dimension;
-
+        std::vector<NodeId> _tour;
     };
 
     template <class dist_type>
@@ -259,6 +288,7 @@ namespace TSP {
         std::vector<EdgeId> tree;
         dist_type HK;
     };
+
 }
 
 
