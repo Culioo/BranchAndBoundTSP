@@ -93,7 +93,9 @@ namespace TSP {
         size_type n = tsp.size();
         for (size_t i = 0; i < std::ceil(n*n/50 ) + n +15; i++) {
             compute_minimal_1_tree<double, dist_type>(tree,lambda, tsp, bn);
-            for (auto it = lambda.begin(); it != lambda.end(); )
+            for (auto it = lambda.begin(); it != lambda.end(); it++){
+
+            }
         }
         return 0;
     }
@@ -178,6 +180,7 @@ namespace TSP {
             while (!Q.empty()) {
                 BranchingNode<dist_type> current_BN(Q.top());
                 Q.pop();
+
                 if (current_BN.HK > upperBound)
                     continue;
                 else {
@@ -187,6 +190,8 @@ namespace TSP {
         }
 
         void print_optimal_tour(const std::string &filename);
+
+        void print_optimal_length();
 
         size_type size() const {
             return  dimension;
@@ -207,6 +212,7 @@ namespace TSP {
     private:
         std::vector<NodeId> _nodes;
         std::vector<dist_type> _weights;
+        std::vector<NodeId> _tour;
         size_type dimension;
 
     };
@@ -220,7 +226,7 @@ namespace TSP {
                       const std::vector<dist_type> & lambda
         ) : required(req) , forbidden(forb), lambda(lambda) {
 
-            this->HK = Held_Karp(tsp, lambda, tree, *this);
+            this->HK = Held_Karp(tsp, this->lambda, tree, *this);
         }
 
         bool check_required(size_type id);
