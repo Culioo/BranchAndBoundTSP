@@ -87,12 +87,13 @@ namespace TSP {
 
     template <class dist_type>
     dist_type Held_Karp(const TSP::Instance<double,dist_type> & tsp,
-                        const std::vector<dist_type> & lambda,
+                        std::vector<dist_type> & lambda,
                         std::vector<EdgeId> & tree,
                         const BranchingNode<dist_type> & bn) {
         size_type n = tsp.size();
         for (size_t i = 0; i < std::ceil(n*n/50 ) + n +15; i++) {
             compute_minimal_1_tree<double, dist_type>(tree,lambda, tsp, bn);
+            for (auto it = lambda.begin(); it != lambda.end(); )
         }
         return 0;
     }
@@ -185,6 +186,8 @@ namespace TSP {
             }
         }
 
+        void print_optimal_tour(const std::string &filename);
+
         size_type size() const {
             return  dimension;
         }
@@ -229,8 +232,6 @@ namespace TSP {
       const std::vector<EdgeId> & get_forbidden() const {
           return forbidden;
       }
-
-
 
 
     private:
