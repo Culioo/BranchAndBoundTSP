@@ -10,6 +10,7 @@
 #include <vector>
 #include <sstream>
 #include <queue>
+#include <numeric>
 #include "util.hpp"
 
 
@@ -41,6 +42,7 @@ namespace TSP {
 
     template <class coord_type, class dist_type>
     void compute_minimal_1_tree(std::vector<EdgeId> & tree,
+                                std::vector<NodeId> & tree_deg,
                                 const std::vector<dist_type> lambda,
                                 const Instance<double, dist_type> & tsp,
                                 const BranchingNode<dist_type> & bn){
@@ -54,6 +56,7 @@ namespace TSP {
             tree.push_back(el);
             to_NodeId(el,i,j,tsp.size());
             uf._union(i,j);
+            tree_deg[i]++, tree_deg[j]++;
         }
 
         std::vector<dist_type> mod_weights;
@@ -81,7 +84,12 @@ namespace TSP {
             }
         }
         tree.push_back(candidates[0]);
+        to_NodeId(candidates[0], i , j , tsp.size());
+        tree_deg[i]++, tree_deg[j]++;
+
         tree.push_back(candidates[1]);
+        to_NodeId(candidates[1], i , j , tsp.size());
+        tree_deg[i]++, tree_deg[j]++;
         return;
     }
 
@@ -91,11 +99,21 @@ namespace TSP {
                         std::vector<EdgeId> & tree,
                         const BranchingNode<dist_type> & bn) {
         size_type n = tsp.size();
-        for (size_t i = 0; i < std::ceil(n*n/50 ) + n +15; i++) {
-            compute_minimal_1_tree<double, dist_type>(tree,lambda, tsp, bn);
-            for (auto it = lambda.begin(); it != lambda.end(); )
+        std::vector<dist_type> sol_vector;
+        for (size_t i = 0; i < std::ceil(n * n / 50) + n + 15; i++) {
+            std::vector<NodeId> tree_deg(n);
+            compute_minimal_1_tree<double, dist_type>(tree, tree_deg ,lambda, tsp, bn);
+            for (size_t j = 0; j < lambda.size(); j++) {
+                lambda[j] += 1*(tree_deg[j] - 2 );  // TODO: replace 1 by t_i
+            }
+            dist_type sum = 0, sum2 = 0 ;
+            for (size_t k1 = 0; k1<tree.size(); k1++)
+                sum += tsp.weight(tree[k1]);
+            for (size_t k2 = 0; k2 < tree_deg.size(); k2++)
+                sum2 += (tree_deg[k2] - 2)*lambda[k2];
+            sol_vector.push_back(sum + sum2);
         }
-        return 0;
+        return *std::max_element(sol_vector.begin(), sol_vector.end());
     }
 
 
@@ -167,7 +185,6 @@ namespace TSP {
             return std::lround(std::sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
         }
 
-
         void compute_optimal_tour()  {
             dist_type upperBound = std::numeric_limits<dist_type>::max(); // we want to do a naive tsp tour!
             auto cmp = [](BranchingNode<dist_type>, BranchingNode<dist_type>) { return true; };
@@ -220,7 +237,7 @@ namespace TSP {
                       const std::vector<dist_type> & lambda
         ) : required(req) , forbidden(forb), lambda(lambda) {
 
-            this->HK = Held_Karp(tsp, lambda, tree, *this);
+            this->HK = Held_Karp(tsp, this->lambda, this->tree, *this);
         }
 
         bool check_required(size_type id);
