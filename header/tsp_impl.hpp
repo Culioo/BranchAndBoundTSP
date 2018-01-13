@@ -78,16 +78,69 @@ namespace TSP {
         while (!Q.empty()) {
             BranchingNode<coord_type, dist_type> current_BN(Q.top());
             Q.pop();
-            dist_type lowerBound = Held_Karp<coord_type,dist_type>(*this,
-                                              current_BN.get_lambda(),
-                                              current_BN.get_tree(),
-                                              current_BN);
-            current_BN.set_HK(lowerBound);
+//            dist_type lowerBound = Held_Karp<coord_type,dist_type>(*this,
+//                                              current_BN.get_lambda(),
+//                                              current_BN.get_tree(),
+//                                              current_BN.get_tree_deg(),
+//                                              current_BN);
+
             //std::cerr << lowerBound << std::endl;
-            if (lowerBound > upperBound)
+            if (current_BN.get_HK() > upperBound)
                 continue;
             else {
+                if (current_BN.tworegular()) {
+                    upperBound = current_BN.get_HK();
+                    continue;
+                }
+                else {
+                    size_type gl_i = 0, choice1 = -1, choice2 = -1;
+                    for (size_type i = 1, done = 0; done != 2 && i < this->size(); i++) {
+                        done = 0;
+                        for (size_type j = 1; j< this->size(); j++) {
+                            if (i != j)
+                                if (!current_BN.check_forbidden(to_EdgeId(i, j, this->size())) &&
+                                    !current_BN.check_required(to_EdgeId(i, j, this->size()))) {
+                                    if (done == 0) choice1 = j;
+                                    if (done == 1) choice2 = j;
+                                    done++;
+                                    if (done == 2) {
+                                        gl_i = i;
+                                        break;
+                                    }
+                                }
+                        }
+                    }
+                    BranchingNode<coord_type, dist_type> q1(current_BN.get_required(),
+                                                            current_BN.get_forbidden(),
+                                                            *this,
+                                                            current_BN.get_lambda(),
+                                                            to_EdgeId(gl_i, choice1, this->size())),
+                        q2(current_BN.get_required(),
+                           current_BN.get_forbidden(),
+                           *this,
+                           current_BN.get_lambda(),
+                           to_EdgeId(gl_i, choice1, this->size()),
+                           to_EdgeId(gl_i, choice2, this->size()));
+                    Q.push(q1);
+                    Q.push(q2);
+                    for (auto it = current_BN.get_required().begin();it != current_BN.get_required().end(); it++ ) {
+                        NodeId ti,tj;
+                        to_NodeId(*it,ti,tj,this->size());
+                        if (gl_i == ti || gl_i == tj) {
+                            BranchingNode<coord_type, dist_type> q3(current_BN.get_required(),
+                                                                    current_BN.get_forbidden(),
+                                                                    *this,
+                                                                    current_BN.get_lambda(),
+                                                                    to_EdgeId(gl_i, choice1, this->size()),
+                                                                    to_EdgeId(gl_i, choice2, this->size()),
+                                                                    true);
+                            Q.push(q3);
+                            break;
+                        }
 
+                    }
+
+                }
             }
         }
     }
