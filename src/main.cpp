@@ -18,10 +18,10 @@ int main(int argc, char* argv[]) {
     TSP::Instance<double,double> myTSP(file);
     myTSP.compute_optimal_tour();
     std::clock_t end = clock();
-//    myTSP.print_optimal_length();
-//    if(argc > 3){
-//        myTSP.print_optimal_tour(argv[3]);
-//    }
+    //myTSP.print_optimal_length();
+    if(argc > 3){
+        myTSP.print_optimal_tour(argv[3]);
+    }
 
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     std::cerr << "reading, initializing and doing nothing took " << elapsed_secs << " s." << std::endl;

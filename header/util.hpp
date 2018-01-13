@@ -32,7 +32,7 @@ public:
     /**
      * Unifies the Partition classes of two given representatives
      * @param rep1 First representative
-     * @param rep2 First representative
+     * @param rep2 Second representative
      */
     void _union(const size_t x, const size_t y) {
         //std::cout << rep1 << ' ' << rep2 << std::endl;
