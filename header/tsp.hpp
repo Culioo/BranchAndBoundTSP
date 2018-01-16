@@ -104,6 +104,19 @@ void compute_minimal_1_tree(std::vector<EdgeId> &tree,
 }
 
 template<class coord_type, class dist_type>
+void compute_mod_Ti(const Instance <coord_type, dist_type> &tsp,
+                    std::vector<dist_type> &sol_vector,
+                    const std::vector<dist_type> &lambda_tmp,
+                    std::vector<EdgeId> &tree,
+                    std::vector<NodeId> &tree_deg) {
+    dist_type sum = 0, sum2 = 0;
+    for (size_t k1 = 0; k1 < tree.size(); k1++)
+            sum += tsp.weight(tree[k1]);
+    for (size_t k2 = 0; k2 < tree_deg.size(); k2++)
+            sum2 += (tree_deg[k2] - 2.) * lambda_tmp[k2];
+    sol_vector.push_back(sum + sum2);
+}
+template<class coord_type, class dist_type>
 dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
                     std::vector<dist_type> lambda,
                     std::vector<EdgeId> &tree,
@@ -114,7 +127,7 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
     std::vector<dist_type> lambda_max(lambda), lambda_tmp(lambda);
     size_t max_el = 0;
     std::vector<EdgeId> tree_max(tsp.size()), tree_deg_max(tree_deg);
-    for (size_t i = 0; i < std::ceil(n * n / 50) + n + 15; i++) {
+    for (size_t i = 0; i < std::ceil(n/4) +5; i++) {
         tree.clear();
         for (auto it = tree_deg.begin(); it != tree_deg.end(); it++)
             *it = 0;
@@ -124,12 +137,7 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
             tree_deg_max = tree_deg;
         }
 
-        dist_type sum = 0, sum2 = 0;
-        for (size_t k1 = 0; k1 < tree.size(); k1++)
-            sum += tsp.weight(tree[k1]);
-        for (size_t k2 = 0; k2 < tree_deg.size(); k2++)
-            sum2 += (tree_deg[k2] - 2.) * lambda_tmp[k2];
-        sol_vector.push_back(sum + sum2);
+        compute_mod_Ti<coord_type, dist_type>(tsp, sol_vector, lambda_tmp, tree, tree_deg);
 
         if (i > 0)
             if (sol_vector[max_el] < sol_vector[i]) {
@@ -138,14 +146,17 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
                 tree_max = tree;
                 tree_deg_max = tree_deg;
             }
-
         for (size_t j = 0; j < lambda_tmp.size(); j++) {
-            lambda_tmp[j] += 1 * (tree_deg[j] - 2.);  // TODO: replace 1 by t_i
+            lambda_tmp[j] += 1./(i+1.) * (tree_deg[j] - 2.);  // TODO: replace 1 by t_i
         }
+
+
     }
+    compute_mod_Ti<coord_type, dist_type>(tsp, sol_vector, lambda_tmp,tree,tree_deg);
     lambda = lambda_max;
     tree = tree_max;
     tree_deg = tree_deg_max;
+    std::cout << lambda[1] <<std::endl;
     return *std::max_element(sol_vector.begin(), sol_vector.end());
 }
 
@@ -217,7 +228,7 @@ class BranchingNode {
                 EdgeId e2
   ) : required(req), forbidden(forb), lambda(lambda), tree(tsp.size()), tree_deg(tsp.size()) {
       this->HK = Held_Karp(tsp, this->lambda, this->tree, this->tree_deg, *this);
-//      required.push_back(e1);
+      required.push_back(e1);
       forbidden.push_back(e2);
 
   }

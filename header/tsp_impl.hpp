@@ -63,7 +63,7 @@ Instance<coord_type, dist_type>::Instance(const std::string &filename) {
             this->_weights.push_back(
                 distance(x[i], y[i], x[j], y[j])
             );
-
+    _tour = std::vector<NodeId >(dimension);
 }
 
 template<class coord_type, class dist_type>
@@ -80,18 +80,13 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
     while (!Q.empty()) {
         BranchingNode<coord_type, dist_type> current_BN(Q.top());
         Q.pop();
-//            dist_type lowerBound = Held_Karp<coord_type,dist_type>(*this,
-//                                              current_BN.get_lambda(),
-//                                              current_BN.get_tree(),
-//                                              current_BN.get_tree_deg(),
-//                                              current_BN);
-
-        //std::cerr << lowerBound << std::endl;
         if (current_BN.get_HK() > upperBound)
             continue;
         else {
             if (current_BN.tworegular()) {
                 upperBound = current_BN.get_HK();
+                std::cerr << "Upper Bound " << upperBound << std::endl;
+                _tour = current_BN.get_tree();
                 continue;
             } else {
                 size_type gl_i = 0, choice1 = std::numeric_limits<size_type>::max(),
@@ -174,8 +169,19 @@ void Instance<coord_type, dist_type>::print_optimal_tour(const std::string &file
     file_to_print << "TYPE : TOUR" << std::endl;
     file_to_print << "DIMENSION : " << this->size() << std::endl;
     file_to_print << "TOUR_SECTION" << std::endl;
+    std::vector<NodeId> path(size());
     for (size_t i = 0; i < this->size(); i++) {
-        file_to_print << this->_tour.at(i) << std::endl;
+        NodeId id1 = std::numeric_limits<NodeId>::max(),
+            id2 = std::numeric_limits<NodeId>::max();
+        to_NodeId(this->_tour.at(i), id1, id2, size());
+        path.push_back(id1);
+        path.push_back(id2);
+    }
+    std::stable_sort(path.begin(),path.end());
+    auto last =  std::unique(path.begin(),path.end());
+    path.erase(last,path.end());
+    for (auto it = path.begin(); it != path.end(); it++) {
+        file_to_print << *it << std::endl;
     }
     file_to_print << "-1" << std::endl;
     file_to_print << "EOF" << std::endl;

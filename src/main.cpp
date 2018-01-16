@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
     TSP::Instance<double,double> myTSP(file);
     myTSP.compute_optimal_tour();
     std::clock_t end = clock();
-    //myTSP.print_optimal_length();
+//    myTSP.print_optimal_length();
     if(argc > 3){
         myTSP.print_optimal_tour(argv[3]);
     }
