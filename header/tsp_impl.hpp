@@ -66,75 +66,78 @@ Instance<coord_type, dist_type>::Instance(const std::string &filename) {
     _tour = std::vector<NodeId >(dimension);
 }
 
+
 template<class coord_type, class dist_type>
 void Instance<coord_type, dist_type>::compute_optimal_tour() {
+    typedef BranchingNode <coord_type, dist_type> BNode;
+
     dist_type upperBound = std::numeric_limits<dist_type>::max(); // we want to do a naive tsp tour!
-    auto cmp = [](BranchingNode<coord_type, dist_type>, BranchingNode<coord_type, dist_type>) { return true; };
-    std::priority_queue<BranchingNode<coord_type, dist_type>,
-                        std::vector<BranchingNode<coord_type, dist_type> >, decltype(cmp)> Q(cmp);
-    Q.push(BranchingNode<coord_type, dist_type>(std::vector<EdgeId>(),
-                                                std::vector<EdgeId>(),
-                                                *this,
-                                                std::vector<dist_type>(dimension)));
+    auto cmp = [](BNode, BNode) { return true; };
+    std::priority_queue<BNode,
+                        std::vector<BNode>, decltype(cmp)> Q(cmp);
+    Q.push(BranchingNode<coord_type, dist_type>(*this)); // Adding empty node to Q
 
     while (!Q.empty()) {
-        BranchingNode<coord_type, dist_type> current_BN(Q.top());
+        BNode current_BNode(Q.top());
         Q.pop();
-        if (current_BN.get_HK() > upperBound)
+        if (current_BNode.get_HK() > upperBound)
             continue;
         else {
-            if (current_BN.tworegular()) {
-                upperBound = current_BN.get_HK();
-                std::cerr << "Upper Bound " << upperBound << std::endl;
-                _tour = current_BN.get_tree();
+            if (current_BNode.tworegular()) {
+                upperBound = current_BNode.get_HK();
+//                std::cerr << "Upper Bound " << upperBound << std::endl;
+//                _tour = current_BNode.get_tree();
                 continue;
             } else {
-                size_type gl_i = 0, choice1 = std::numeric_limits<size_type>::max(),
-                    choice2 = std::numeric_limits<size_type>::max();
-                for (size_type i = 1, done = 0; done != 2 && i < this->size(); i++) {
-                    done = 0;
-                    for (size_type j = 0; j < this->size(); j++) {
-                        if (i != j)
-                            if (!current_BN.check_forbidden(to_EdgeId(i, j, this->size())) &&
-                                !current_BN.check_required(to_EdgeId(i, j, this->size()))) {
-                                if (done == 0) choice1 = j;
-                                if (done == 1) choice2 = j;
-                                done++;
-                                if (done == 2) {
-                                    gl_i = i;
-                                    break;
-                                }
-                            }
-                    }
-                }
 
-                BranchingNode<coord_type, dist_type> q1(current_BN.get_required(),
-                                                        current_BN.get_forbidden(),
-                                                        *this,
-                                                        current_BN.get_lambda(),
-                                                        to_EdgeId(gl_i, choice1, this->size())),
-                    q2(current_BN.get_required(),
-                       current_BN.get_forbidden(),
-                       *this,
-                       current_BN.get_lambda(),
-                       to_EdgeId(gl_i, choice1, this->size()),
-                       to_EdgeId(gl_i, choice1, this->size()));
-                Q.push(q1);
-                Q.push(q2);
-                for (auto it = current_BN.get_required().begin(); it != current_BN.get_required().end(); it++) {
-                    NodeId ti, tj;
-                    to_NodeId(*it, ti, tj, this->size());
-                    if (gl_i == ti || gl_i == tj) {
-                        BranchingNode<coord_type, dist_type> q3(current_BN.get_required(),
-                                                                current_BN.get_forbidden(),
-                                                                *this,
-                                                                current_BN.get_lambda(),
-                                                                to_EdgeId(gl_i, choice1, this->size()),
-                                                                to_EdgeId(gl_i, choice2, this->size()),
-                                                                true);
-                        Q.push(q3);
-                        break;
-                    }
+
+
+//                size_type gl_i = 0, choice1 = std::numeric_limits<size_type>::max(),
+//                    choice2 = std::numeric_limits<size_type>::max();
+//                for (size_type i = 1, done = 0; done != 2 && i < this->size(); i++) {
+//                    done = 0;
+//                    for (size_type j = 0; j < this->size(); j++) {
+//                        if (i != j)
+//                            if (!current_BNode.is_forbidden(to_EdgeId(i, j, this->size())) &&
+//                                !current_BNode.is_required(to_EdgeId(i, j, this->size()))) {
+//                                if (done == 0) choice1 = j;
+//                                if (done == 1) choice2 = j;
+//                                done++;
+//                                if (done == 2) {
+//                                    gl_i = i;
+//                                    break;
+//                                }
+//                            }
+//                    }
+//                }
+//
+//                BNode q1(current_BNode.get_required(),
+//                         current_BNode.get_forbidden(),
+//                         *this,
+//                         current_BNode.get_lambda(),
+//                         to_EdgeId(gl_i, choice1, this->size())),
+//                    q2(current_BNode.get_required(),
+//                       current_BNode.get_forbidden(),
+//                       *this,
+//                       current_BNode.get_lambda(),
+//                       to_EdgeId(gl_i, choice1, this->size()),
+//                       to_EdgeId(gl_i, choice1, this->size()));
+//                Q.push(q1);
+//                Q.push(q2);
+//                for (auto it = current_BNode.get_required().begin(); it != current_BNode.get_required().end(); it++) {
+//                    NodeId ti, tj;
+//                    to_NodeId(*it, ti, tj, this->size());
+//                    if (gl_i == ti || gl_i == tj) {
+//                        BNode q3(current_BNode.get_required(),
+//                                 current_BNode.get_forbidden(),
+//                                 *this,
+//                                 current_BNode.get_lambda(),
+//                                 to_EdgeId(gl_i, choice1, this->size()),
+//                                 to_EdgeId(gl_i, choice2, this->size()),
+//                                 true);
+//                        Q.push(q3);
+//                        break;
+//                    }
                 }
             }
         }
@@ -186,6 +189,8 @@ void Instance<coord_type, dist_type>::print_optimal_tour(const std::string &file
     file_to_print << "-1" << std::endl;
     file_to_print << "EOF" << std::endl;
 }
-}
+
+
+} //end namespace TSP
 
 #endif //BRANCHANDBOUNDTSP_TSP_IMPL_HPP
