@@ -223,10 +223,15 @@ class BranchingNode {
   }
 
   void forbid(NodeId idx, EdgeId e1, EdgeId e2) {
-      EdgeId edge_start = to_EdgeId(idx, 0, size);
-      for (NodeId k = 0; k < size; k++)
-          if (edge_start + k != e1 && edge_start + k != e2)
-              push_forbidden(edge_start+k);
+//      EdgeId edge_start = to_EdgeId(idx, 0, size);
+      for (NodeId k = 0; k < size; k++) {
+          if (idx != k) {
+              EdgeId edge = to_EdgeId(idx, k, size);
+              if (edge != e1 && edge != e2)
+                  push_forbidden(edge);
+
+          }
+      }
   }
 
 
@@ -259,13 +264,13 @@ class BranchingNode {
   }
 
     void push_forbidden(EdgeId e, const BranchingNode<coord_type, dist_type> &BNode) {
-        if (is_forbidden(e))
-            return;
+//        if (is_forbidden(e))
+//            return;
         forbidden.push_back(e);
     }
     void push_forbidden(EdgeId e) {
-        if (is_forbidden(e))
-            return;
+//        if (is_forbidden(e))
+//            return;
         forbidden.push_back(e);
     }
 

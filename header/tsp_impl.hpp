@@ -90,7 +90,7 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
 //                _tour = current_BNode.get_tree();
                 continue;
             } else {
-                std::cout << "vindaloop" << std::endl;
+//                std::cout << "vindaloop" << std::endl;
                 size_type gl_i = 0, choice1 = std::numeric_limits<size_type>::max(),
                     choice2 = std::numeric_limits<size_type>::max();
                 for (NodeId node = 1;  node <  current_BNode.get_tree().get_nodes().size(); node++) {
@@ -103,7 +103,7 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                 assert(gl_i!=0);
                 size_t counter = 0;
                 for (const auto & el : current_BNode.get_tree().get_node(gl_i).neighbors()){
-                    if (!current_BNode.is_required(to_EdgeId(gl_i, el, size())) ||
+                    if (!current_BNode.is_required(to_EdgeId(gl_i, el, size())) &&
                         !current_BNode.is_forbidden(to_EdgeId(gl_i, el , size()))) {
                         if (counter == 0)
                             choice1 = el;
@@ -118,15 +118,26 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                     q2(current_BNode,
                        *this,
                        to_EdgeId(gl_i, choice1, this->size()),
-                       to_EdgeId(gl_i, choice1, this->size()));
+                       to_EdgeId(gl_i, choice2, this->size()));
                 Q.push(q1);
                 Q.push(q2);
 
-                BNode q3(current_BNode, *this,
-                         to_EdgeId(gl_i, choice1, this->size()),
-                         to_EdgeId(gl_i, choice2, this->size()),
-                         true);
-                Q.push(q3);
+                bool take_q3 = true;
+                for (auto node_it =  current_BNode.get_tree().get_node(gl_i).neighbors().begin();
+                     node_it != current_BNode.get_tree().get_node(gl_i).neighbors().end(); node_it++) {
+                    if (current_BNode.is_required(to_EdgeId(gl_i, *node_it, this->size()))) {
+                        take_q3 = false;
+                        break;
+                    }
+
+                }
+                if (take_q3) {
+                    BNode q3(current_BNode, *this,
+                             to_EdgeId(gl_i, choice1, this->size()),
+                             to_EdgeId(gl_i, choice2, this->size()),
+                             true);
+                    Q.push(q3);
+                }
 
                 }
             }
