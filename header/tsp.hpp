@@ -11,8 +11,12 @@
 #include <sstream>
 #include <queue>
 #include <numeric>
+#include <cassert>
 #include "util.hpp"
 #include "tree.hpp"
+
+#define EPS 1. - 10e-5
+
 
 // TODO: Split header and cpp methods
 namespace TSP {
@@ -20,6 +24,8 @@ namespace TSP {
 using size_type = std::size_t;
 using NodeId = size_type;
 using EdgeId = size_type;
+
+
 
 template<class coord_type, class dist_type>
 class BranchingNode;
@@ -71,12 +77,16 @@ void compute_minimal_1_tree(OneTree &tree,
             candidates.push_back(j);
         if ((i != j) && (i != 0) && (0 != j) && (tree.get_num_edges() < tsp.size()-1 )) {
             if (uf._find(i) != uf._find(j)) {
+                EdgeId edge = to_EdgeId(i,j,tsp.size());
+                assert(!BNode.is_forbidden(edge));
                 tree.add_edge(i, j);
                 uf._union(i, j);
             }
         }
     }
     // This should be okay since we forbid all edges where deg >= 3 could happen
+    assert(!BNode.is_forbidden(to_EdgeId(0,candidates.at(0),tsp.size())));
+    assert(!BNode.is_forbidden(to_EdgeId(0,candidates.at(1),tsp.size())));
     tree.add_edge(0, candidates.at(0));
     tree.add_edge(0, candidates.at(1));
     return;
@@ -86,14 +96,25 @@ template<class coord_type, class dist_type>
 dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
                     std::vector<double> & lambda,
                     OneTree &tree,
-                    const BranchingNode<coord_type, dist_type> &bn) {
+                    const BranchingNode<coord_type, dist_type> &bn,
+                    bool root = false) {
     size_type n = tsp.size();
     std::vector<dist_type> sol_vector;
-    std::vector<double> lambda_max(lambda), lambda_tmp(lambda);
-    OneTree tree_max(tree);
+    std::vector<double> lambda_max(lambda.size(),0), lambda_tmp(lambda.size(),0);
+    OneTree tree_max(tree), tree_tmp(tree);
+    double t_0 = 0, del_0 = 0, deldel = 0;
     size_t max_el = 0;
+    size_t N = std::ceil(n / 4) + 5;
+    if (root) {
+        N =  std::ceil(n*n / 50) + n +  15;
+    }
 
-    for (size_t i = 0; i < std::ceil(n / 4) + 5; i++) {
+    t_0 = 1./(2. * tsp.size()) * std::accumulate(lambda.begin(), lambda.end(), 0.);
+
+    deldel = t_0 / (N*N - N);
+    del_0 = 3 * t_0 / (2 * N);
+
+    for (size_t i = 0; i < N; i++) {
         tree.clear();
         compute_minimal_1_tree<coord_type, dist_type>(tree, lambda_tmp, tsp, bn);
 
@@ -107,6 +128,17 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
         if (i == 0) {
             tree_max = tree;
             lambda_max = lambda_tmp;
+            if(root){
+                t_0 = sum/(2.*n);
+            }
+
+            for (size_t j = 0; j < lambda_tmp.size(); j++) {
+                lambda_tmp[j] += t_0 * (tree.get_node(j).degree() - 2.);
+            }
+            t_0 = t_0 - del_0;
+            del_0 = del_0 - deldel;
+            continue;
+            tree_tmp  = tree;
         }
 
         if (i > 0)
@@ -115,14 +147,17 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
                 max_el = i;
                 tree_max = tree;
             }
-
         for (size_t j = 0; j < lambda_tmp.size(); j++) {
-            lambda_tmp[j] += 1. / (i + 1.) * (tree.get_node(j).degree() - 2.);  // TODO: replace 1 by t_i
+            lambda_tmp[j] += t_0 * (0.6 * (tree.get_node(j).degree() - 2.) + 0.4*(tree_tmp.get_node(j).degree() - 2.));
         }
+        t_0 = t_0 - del_0;
+        del_0 = del_0 - deldel;
     }
-    lambda = lambda_max;
+    if(root){
+        lambda = lambda_max;
+    }
     tree = tree_max;
-    return *std::max_element(sol_vector.begin(), sol_vector.end());
+    return std::ceil(*std::max_element(sol_vector.begin(), sol_vector.end()));
 }
 
 template<class coord_type, class dist_type>
@@ -168,7 +203,7 @@ class BranchingNode {
  public:
   BranchingNode(const Instance<coord_type, dist_type> &tsp
   ) : required(), forbidden(), lambda(size, 0), tree(0, size), size(tsp.size()) {
-      this->HK = Held_Karp(tsp, this->lambda, this->tree, *this);
+      this->HK = Held_Karp(tsp, this->lambda, this->tree, *this, true);
   }
 
   BranchingNode(const BranchingNode<coord_type, dist_type> &BNode,
@@ -177,7 +212,7 @@ class BranchingNode {
   ) : required(BNode.get_required()),
       forbidden(BNode.get_forbidden()),
       lambda(BNode.get_lambda()),
-      tree(0, size),
+      tree(0, tsp.size()),
       size(tsp.size()) {
 
       this->push_forbidden(e1, BNode);
@@ -188,11 +223,12 @@ class BranchingNode {
                 const Instance<coord_type, dist_type> &tsp,
                 EdgeId e1,
                 EdgeId e2
-  ) : required(BNode.get_required()),
+  ) : size(tsp.size()),
+      required(BNode.get_required()),
       forbidden(BNode.get_forbidden()),
       lambda(BNode.get_lambda()),
-      tree(0, size),
-      size(tsp.size()) {
+      tree(0, tsp.size())
+       {
       push_required(e1, BNode);
       push_forbidden(e2, BNode);
       this->HK = Held_Karp(tsp, this->lambda, this->tree, *this);
@@ -203,11 +239,12 @@ class BranchingNode {
                 EdgeId e1,
                 EdgeId e2,
                 bool both_req
-  ) : required(BNode.get_required()),
+  ) : size(tsp.size()),
+      required(BNode.get_required()),
       forbidden(BNode.get_forbidden()),
       lambda(BNode.get_lambda()),
-      tree(0, size),
-      size(tsp.size()) {
+      tree(0, tsp.size()) {
+
       if (both_req) {
           push_required(e1, BNode);
           push_required(e2, BNode);
@@ -215,21 +252,35 @@ class BranchingNode {
       this->HK = Held_Karp(tsp, this->lambda, this->tree, *this);
   }
 
+  const EdgeId reverse_edge(EdgeId e, size_type n) const {
+      NodeId i = 0, j = 0;
+      to_NodeId(e, i , j , n);
+      return j* n + i;
+  }
+
   bool is_required(EdgeId id) const {
-      return (std::find(required.begin(), required.end(), id) != required.end());
+      assert((std::find(required.begin(), required.end(), id) == required.end() )
+          == ( std::find(required.begin(), required.end(), reverse_edge(id,size)) == required.end()) );
+      return (std::find(required.begin(), required.end(), id) != required.end()
+      && std::find(required.begin(), required.end(), reverse_edge(id,size)) != required.end())
+          ;
   }
 
   bool is_forbidden(EdgeId id) const {
-      return (std::find(forbidden.begin(), forbidden.end(), id) != forbidden.end());
+      return (std::find(forbidden.begin(), forbidden.end(), id) != forbidden.end()
+          && std::find(forbidden.begin(), forbidden.end(), reverse_edge(id,size)) != forbidden.end());
   }
+
+
 
   void forbid(NodeId idx, EdgeId e1, EdgeId e2) {
 //      EdgeId edge_start = to_EdgeId(idx, 0, size);
       for (NodeId k = 0; k < size; k++) {
           if (idx != k) {
               EdgeId edge = to_EdgeId(idx, k, size);
-              if (edge != e1 && edge != e2)
+              if (edge != e1 && edge != e2) {
                   push_forbidden(edge);
+              }
 
           }
       }
@@ -242,17 +293,63 @@ class BranchingNode {
               EdgeId edge = to_EdgeId(idx, k, size);
               if (edge != e1 && edge != e2)
                   push_required(edge);
-
           }
       }
   }
 
 
+  void alt_forbid() {
+
+  }
+
   void push_required(EdgeId e, const BranchingNode<coord_type, dist_type> &BNode) {
       if (is_required(e))
           return;
+
+//      assert(e != 1122);
+//      if (!is_forbidden(e)) {
+//          int count = 0;
+//          NodeId i = 0, j = 0;
+//          to_NodeId(e,i,j,size);
+//          for (NodeId k = 0; i < size; i++){
+//              if(is_required(to_EdgeId(i, k, size))){
+//                  count++;
+//              }
+//          }
+//          if(count == 2){
+//
+//          }
+//
+//
+//      }
+
       if (!is_forbidden(e)) {
+
+          int count = 0;
           NodeId i = 0, j = 0;
+          to_NodeId(e,i,j,size);
+          for (NodeId k = 0; i < size; i++){
+              if(is_required(to_EdgeId(i, k, size))){
+                  count++;
+              }
+          }
+          if(count == 2){
+            push_forbidden(e);
+              return;
+          }
+          count = 0;
+          for (NodeId k = 0; i < size; i++){
+              if(is_required(to_EdgeId(j, k, size))){
+                  count++;
+              }
+          }
+          if(count == 2){
+              push_forbidden(e);
+              return;
+          }
+
+
+
           to_NodeId(e, i, j, size);
           for (const auto & el : required) {
               NodeId idx1 = 0, idx2 = 0;
@@ -270,15 +367,18 @@ class BranchingNode {
                   forbid(j, e, el);
               }
           }
-          this->required.push_back(e);
+          this->push_required(e);
+
       }
   }
 
   void push_required(EdgeId e) {
       if (is_required(e))
           return;
-      if (!is_forbidden(e))
-        this->required.push_back(e);
+      if (!is_forbidden(e)) {
+          this->required.push_back(e);
+          this->required.push_back(reverse_edge(e,size));
+      }
   }
 
     void push_forbidden(EdgeId e, const BranchingNode<coord_type, dist_type> &BNode) {
@@ -303,14 +403,18 @@ class BranchingNode {
 //                    admit(j, e, el);
 //                }
 //            }
-        if (!is_required(e))
-            this->forbidden.push_back(e);
+        if (!is_required(e)) {
+            this->push_forbidden(e);
+        }
 //        }
     }
     void push_forbidden(EdgeId e) {
         if (is_forbidden(e))
             return;
-        forbidden.push_back(e);
+        if (!is_required(e)) {
+            forbidden.push_back(e);
+            forbidden.push_back(reverse_edge(e, size));
+        }
     }
 
   const std::vector<EdgeId> &get_required() const {

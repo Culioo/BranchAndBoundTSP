@@ -43,6 +43,29 @@ using EdgeId = size_type;
 //  std::vector<NodeId> _nodes;
 //};
 
+
+struct Edge {
+  Edge(NodeId i, NodeId j) {
+      v = i;
+      w = j;
+  }
+
+  Edge(NodeId i, NodeId j,size_type id) {
+      v = i;
+      w = j;
+  }
+  size_type id;
+  NodeId  v;
+  NodeId w;
+
+  bool operator==(const Edge & other) const {
+      return (v == other.v && w == other.w) || (v==other.w && w == other.v);
+  }
+  bool operator!=(const Edge & other) const {
+      return (v != other.v && v != other.w) || ( w != other.w || w != other.v);
+  }
+};
+
 class OneTree {
  public:
   OneTree(NodeId root, size_t size) : size(size), //MST(0, size - 1)
@@ -76,7 +99,7 @@ class OneTree {
       if (i >= num_nodes || j >= num_nodes)
           throw std::runtime_error("Index out of range while adding edge to 1-tree");
 
-      _edges.push_back(to_EdgeId(i, j, size));
+      _edges.push_back(to_EdgeId(i,j,size));
       _nodes.at(i).add_neighbor(j);
       _nodes.at(j).add_neighbor(i);
       num_edges++;

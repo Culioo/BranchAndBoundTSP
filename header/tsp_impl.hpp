@@ -73,7 +73,7 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
     typedef BranchingNode <coord_type, dist_type> BNode;
 
     dist_type upperBound = std::numeric_limits<dist_type>::max(); // we want to do a naive tsp tour!
-    auto cmp = [](BNode, BNode) { return true; };
+    auto cmp = [&](BNode & a, BNode & b) { return true; }; //a.get_HK() < b.get_HK(); };
     std::priority_queue<BNode,
                         std::vector<BNode>, decltype(cmp)> Q(cmp);
     Q.push(BranchingNode<coord_type, dist_type>(*this)); // Adding empty node to Q
@@ -81,13 +81,13 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
     while (!Q.empty()) {
         BNode current_BNode(Q.top());
         Q.pop();
-        if (current_BNode.get_HK() > upperBound)
+        if (current_BNode.get_HK() >= upperBound)
             continue;
         else {
             if (current_BNode.tworegular()) {
                 upperBound = current_BNode.get_HK();
                 std::cerr << "Upper Bound " << upperBound << std::endl;
-                _tour = current_BNode.get_tree().get_edges();
+//                _tour = current_BNode.get_tree().get_edges();
                 continue;
             } else {
 //                std::cout << "vindaloop" << std::endl;
@@ -109,13 +109,15 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                             choice1 = el;
                         if (counter == 1)
                             choice2 = el;
+
                         counter++;
                         if (counter > 1)
-
                             break;
                     }
                 }
-                std::cout << choice1 << ' ' << choice2 << std::endl;
+                assert(choice1 < std::numeric_limits<NodeId>::max());
+                assert(choice2 < std::numeric_limits<NodeId>::max());
+//                std::cout << choice1 << ' ' << choice2 << std::endl;
                 BNode q1(current_BNode, *this, to_EdgeId(gl_i, choice1, this->size())),
                     q2(current_BNode,
                        *this,
@@ -144,9 +146,8 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                 }
             }
         }
-     upperBound = Q.top().get_HK();
      std::cerr << "Optimal Length " << upperBound << std::endl;
-     _tour = Q.top().get_tree().get_edges();
+//     _tour = Q.top().get_tree().get_edges();
 }
 
 
