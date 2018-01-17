@@ -10,6 +10,10 @@
 #include <algorithm>
 #include <string>
 
+using size_type = std::size_t;
+using NodeId = size_type;
+using EdgeId = size_type;
+
 class Union_Find {
     friend std::ostream& operator<<(std::ostream &os, const Union_Find& n);
 public:
@@ -89,6 +93,20 @@ private:
 
 
 };
+
+EdgeId to_EdgeId(NodeId i, NodeId j, size_type N) {
+    if (i == j)
+        throw std::runtime_error("Loops are not contained in this instance");
+    if (i > j)
+        std::swap(i, j);
+    return (i) * (N) + j;
+}
+
+void to_NodeId(EdgeId e, NodeId &i, NodeId &j, size_type N) {
+    j = e % (N);
+    i = (e - j) / (N);
+}
+
 
 
 void stripColons(std::string &x) {

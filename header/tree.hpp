@@ -5,63 +5,94 @@
 #ifndef BRANCHANDBOUNDTSP_TREE_HPP
 #define BRANCHANDBOUNDTSP_TREE_HPP
 
-#include <cstdlib>
+#include<cstdlib>
 #include <vector>
 #include <stdexcept>
 #include "graph.hpp"
+#include "util.hpp"
 
 namespace TSP {
 using size_type = std::size_t;
 using NodeId = size_type;
 using EdgeId = size_type;
 
-
 class Tree : public TSP::Graph {
  public:
   Tree(NodeId root, NodeId size) : TSP::Graph(size) {
-    _nodes.push_back(root);
-    _root = root;
+      _nodes.push_back(root);
+      _root = root;
   }
 
   TSP::NodeId predecessor(TSP::NodeId id) const {
-    auto k = this->node(id).neighbors().at(0);
-    if (k == TSP::invalid_node_id)
-      throw std::runtime_error("No neighbors on this node!");
-    else
-      return k;
+      auto k = this->node(id).neighbors().at(0);
+      if (k == TSP::invalid_node_id)
+          throw std::runtime_error("No neighbors on this node!");
+      else
+          return k;
   }
 
   const std::vector<NodeId> &nodes() const {
-    return _nodes;
+      return _nodes;
   }
 
   const NodeId &root() const {
-    return _root;
+      return _root;
   }
  private:
   NodeId _root;
-  std::vector<EdgeId> _edges;
   std::vector<NodeId> _nodes;
-  size_type num_edges;
-  size_type num_nodes;
 };
 
 class OneTree {
-  OneTree(NodeId root, size_t size) : MST(0, size - 1), _root(root) {
-    _nodes.push_back(root);
-    for (NodeId node = 0; node )
+ public:
+  OneTree(NodeId root, size_t size) : size(size), MST(0, size - 1), _root(), _nodes(size), _edges(0) {
+      _nodes.push_back(Node()); //root = 0 !!
+      for (NodeId node = 1; node < size; node++)
+          _nodes.push_back(Node());
+      num_nodes = _nodes.size();
+  }
+
+  void add_edge(NodeId i, NodeId j) {
+      if (i >= num_nodes || j >= num_nodes)
+          throw std::runtime_error("Index out of range while adding edge to 1-tree");
+      if (i == 0 || j == 0)
+          if (i == 0)
+              _root.add_neighbor(j);
+          else
+              _root.add_neighbor(i);
+      else
+          MST.add_edge(i - 1, j - 1);
+      _edges.push_back(to_EdgeId(i, j, size));
+      num_edges++;
+  }
+
+  const size_type &get_num_edges() {
+      return num_edges;
+  }
+  const std::vector<EdgeId> &get_edges() {
+      return _edges;
+  }
+
+  const std::vector<Node> &get_nodes() {
+      return _nodes;
+  }
+
+  const Node &get_node(NodeId id) {
+      return _nodes.at(id);
   }
 
  private:
   Tree MST;
-  NodeId _root;
+  Node _root;
+  size_type size;
+
+  std::vector<Node> _nodes;
   std::vector<EdgeId> _edges;
-  std::vector<NodeId> _nodes;
+
   size_type num_edges;
   size_type num_nodes;
 };
 
 };
-
 
 #endif //BRANCHANDBOUNDTSP_TREE_HPP

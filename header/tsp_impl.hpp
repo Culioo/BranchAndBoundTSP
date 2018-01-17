@@ -92,25 +92,25 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
 
 
 
-//                size_type gl_i = 0, choice1 = std::numeric_limits<size_type>::max(),
-//                    choice2 = std::numeric_limits<size_type>::max();
-//                for (size_type i = 1, done = 0; done != 2 && i < this->size(); i++) {
-//                    done = 0;
-//                    for (size_type j = 0; j < this->size(); j++) {
-//                        if (i != j)
-//                            if (!current_BNode.is_forbidden(to_EdgeId(i, j, this->size())) &&
-//                                !current_BNode.is_required(to_EdgeId(i, j, this->size()))) {
-//                                if (done == 0) choice1 = j;
-//                                if (done == 1) choice2 = j;
-//                                done++;
-//                                if (done == 2) {
-//                                    gl_i = i;
-//                                    break;
-//                                }
-//                            }
-//                    }
-//                }
-//
+                size_type gl_i = 0, choice1 = std::numeric_limits<size_type>::max(),
+                    choice2 = std::numeric_limits<size_type>::max();
+                for (size_type i = 1, done = 0; done != 2 && i < this->size(); i++) {
+                    done = 0;
+                    for (size_type j = 0; j < this->size(); j++) {
+                        if (i != j)
+                            if (!current_BNode.is_forbidden(to_EdgeId(i, j, this->size())) &&
+                                !current_BNode.is_required(to_EdgeId(i, j, this->size()))) {
+                                if (done == 0) choice1 = j;
+                                if (done == 1) choice2 = j;
+                                done++;
+                                if (done == 2) {
+                                    gl_i = i;
+                                    break;
+                                }
+                            }
+                    }
+                }
+
 //                BNode q1(current_BNode.get_required(),
 //                         current_BNode.get_forbidden(),
 //                         *this,
@@ -138,7 +138,7 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
 //                        Q.push(q3);
 //                        break;
 //                    }
-                }
+//                }
             }
         }
     }
