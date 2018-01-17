@@ -82,18 +82,18 @@ class OneTree {
       num_edges++;
   }
 
-  const size_type &get_num_edges() {
+  const size_type &get_num_edges() const {
       return num_edges;
   }
-  const std::vector<EdgeId> &get_edges() {
+  const std::vector<EdgeId> &get_edges() const {
       return _edges;
   }
 
-  const std::vector<Node> &get_nodes() {
+  const std::vector<Node> &get_nodes() const {
       return _nodes;
   }
 
-  const Node &get_node(NodeId id) {
+  const Node &get_node(NodeId id) const  {
       return _nodes.at(id);
   }
 

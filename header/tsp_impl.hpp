@@ -87,7 +87,7 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
             if (current_BNode.tworegular()) {
                 upperBound = current_BNode.get_HK();
                 std::cerr << "Upper Bound " << upperBound << std::endl;
-//                _tour = current_BNode.get_tree();
+                _tour = current_BNode.get_tree().get_edges();
                 continue;
             } else {
 //                std::cout << "vindaloop" << std::endl;
@@ -102,7 +102,7 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
 
                 assert(gl_i!=0);
                 size_t counter = 0;
-                for (const auto & el : current_BNode.get_tree().get_node(gl_i).neighbors()){
+                for (const auto & el : current_BNode.get_tree().get_node(gl_i).neighbors()) {
                     if (!current_BNode.is_required(to_EdgeId(gl_i, el, size())) &&
                         !current_BNode.is_forbidden(to_EdgeId(gl_i, el , size()))) {
                         if (counter == 0)
@@ -111,9 +111,11 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                             choice2 = el;
                         counter++;
                         if (counter > 1)
+
                             break;
                     }
                 }
+                std::cout << choice1 << ' ' << choice2 << std::endl;
                 BNode q1(current_BNode, *this, to_EdgeId(gl_i, choice1, this->size())),
                     q2(current_BNode,
                        *this,
@@ -142,7 +144,10 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                 }
             }
         }
-    }
+     upperBound = Q.top().get_HK();
+     std::cerr << "Optimal Length " << upperBound << std::endl;
+     _tour = Q.top().get_tree().get_edges();
+}
 
 
 template<class coord_type, class dist_type>

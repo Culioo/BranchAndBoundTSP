@@ -43,10 +43,11 @@ void compute_minimal_1_tree(OneTree &tree,
     //compute modified weights c_\lambda and set the weight of required edges
     // to -inf and for forbidden edges to +inf
     std::vector<dist_type> mod_weights(tsp.num_edges(), 0);
-    for (const auto &el : BNode.get_required())
-        mod_weights.at(el) = -std::numeric_limits<dist_type>::max();
     for (const auto &el : BNode.get_forbidden())
         mod_weights.at(el) = std::numeric_limits<dist_type>::max();
+    for (const auto &el : BNode.get_required())
+        mod_weights.at(el) = -std::numeric_limits<dist_type>::max();
+
 
     for (size_t edge = 0; edge < tsp.weights().size(); edge++) {
         if (mod_weights.at(edge) == 0) {//double comparison with == is bad, but let's make it a TODO
@@ -234,6 +235,18 @@ class BranchingNode {
       }
   }
 
+  void admit(NodeId idx, EdgeId e1, EdgeId e2) {
+//      EdgeId edge_start = to_EdgeId(idx, 0, size);
+      for (NodeId k = 0; k < size; k++) {
+          if (idx != k) {
+              EdgeId edge = to_EdgeId(idx, k, size);
+              if (edge != e1 && edge != e2)
+                  push_required(edge);
+
+          }
+      }
+  }
+
 
   void push_required(EdgeId e, const BranchingNode<coord_type, dist_type> &BNode) {
       if (is_required(e))
@@ -247,30 +260,56 @@ class BranchingNode {
               if (i == idx1) {
                   forbid(i, e, el);
               }
-              else if (i == idx2) {
+              if (i == idx2) {
                   forbid(i, e, el);
               }
-              else if (j == idx1) {
+              if (j == idx1) {
                   forbid(j, e, el);
               }
-              else if (j == idx2) {
+              if (j == idx2) {
                   forbid(j, e, el);
               }
           }
           this->required.push_back(e);
       }
+  }
 
-
+  void push_required(EdgeId e) {
+      if (is_required(e))
+          return;
+      if (!is_forbidden(e))
+        this->required.push_back(e);
   }
 
     void push_forbidden(EdgeId e, const BranchingNode<coord_type, dist_type> &BNode) {
-//        if (is_forbidden(e))
-//            return;
-        forbidden.push_back(e);
+        if (is_forbidden(e))
+            return;
+//        if (!is_required(e)) {
+//            NodeId i = 0, j = 0;
+//            to_NodeId(e, i, j, size);
+//            for (const auto & el : forbidden) {
+//                NodeId idx1 = 0, idx2 = 0;
+//                to_NodeId(el,idx1,idx2,size);
+//                if (i == idx1) {
+//                    admit(i, e, el);
+//                }
+//                if (i == idx2) {
+//                    admit(i, e, el);
+//                }
+//                if (j == idx1) {
+//                    admit(j, e, el);
+//                }
+//                if (j == idx2) {
+//                    admit(j, e, el);
+//                }
+//            }
+        if (!is_required(e))
+            this->forbidden.push_back(e);
+//        }
     }
     void push_forbidden(EdgeId e) {
-//        if (is_forbidden(e))
-//            return;
+        if (is_forbidden(e))
+            return;
         forbidden.push_back(e);
     }
 
@@ -298,7 +337,7 @@ class BranchingNode {
   void set_HK(dist_type c) {
       this->HK = c;
   }
-  dist_type get_HK() {
+  const dist_type get_HK() const {
       return this->HK;
   }
 
