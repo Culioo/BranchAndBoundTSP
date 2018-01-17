@@ -5,6 +5,7 @@
 #ifndef BRANCHANDBOUNDTSP_TSP_IMPL_HPP
 #define BRANCHANDBOUNDTSP_TSP_IMPL_HPP
 
+#include <cassert>
 namespace TSP {
 template<class coord_type, class dist_type>
 Instance<coord_type, dist_type>::Instance(const std::string &filename) {
@@ -85,64 +86,53 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
         else {
             if (current_BNode.tworegular()) {
                 upperBound = current_BNode.get_HK();
-//                std::cerr << "Upper Bound " << upperBound << std::endl;
+                std::cerr << "Upper Bound " << upperBound << std::endl;
 //                _tour = current_BNode.get_tree();
                 continue;
             } else {
-
-
-
+                std::cout << "vindaloop" << std::endl;
                 size_type gl_i = 0, choice1 = std::numeric_limits<size_type>::max(),
                     choice2 = std::numeric_limits<size_type>::max();
-                for (size_type i = 1, done = 0; done != 2 && i < this->size(); i++) {
-                    done = 0;
-                    for (size_type j = 0; j < this->size(); j++) {
-                        if (i != j)
-                            if (!current_BNode.is_forbidden(to_EdgeId(i, j, this->size())) &&
-                                !current_BNode.is_required(to_EdgeId(i, j, this->size()))) {
-                                if (done == 0) choice1 = j;
-                                if (done == 1) choice2 = j;
-                                done++;
-                                if (done == 2) {
-                                    gl_i = i;
-                                    break;
-                                }
-                            }
+                for (NodeId node = 1;  node <  current_BNode.get_tree().get_nodes().size(); node++) {
+                    if (current_BNode.get_tree().get_node(node).degree() > 2) {
+                        gl_i = node;
+                        break;
                     }
                 }
 
-//                BNode q1(current_BNode.get_required(),
-//                         current_BNode.get_forbidden(),
-//                         *this,
-//                         current_BNode.get_lambda(),
-//                         to_EdgeId(gl_i, choice1, this->size())),
-//                    q2(current_BNode.get_required(),
-//                       current_BNode.get_forbidden(),
-//                       *this,
-//                       current_BNode.get_lambda(),
-//                       to_EdgeId(gl_i, choice1, this->size()),
-//                       to_EdgeId(gl_i, choice1, this->size()));
-//                Q.push(q1);
-//                Q.push(q2);
-//                for (auto it = current_BNode.get_required().begin(); it != current_BNode.get_required().end(); it++) {
-//                    NodeId ti, tj;
-//                    to_NodeId(*it, ti, tj, this->size());
-//                    if (gl_i == ti || gl_i == tj) {
-//                        BNode q3(current_BNode.get_required(),
-//                                 current_BNode.get_forbidden(),
-//                                 *this,
-//                                 current_BNode.get_lambda(),
-//                                 to_EdgeId(gl_i, choice1, this->size()),
-//                                 to_EdgeId(gl_i, choice2, this->size()),
-//                                 true);
-//                        Q.push(q3);
-//                        break;
-//                    }
-//                }
+                assert(gl_i!=0);
+                size_t counter = 0;
+                for (const auto & el : current_BNode.get_tree().get_node(gl_i).neighbors()){
+                    if (!current_BNode.is_required(to_EdgeId(gl_i, el, size())) ||
+                        !current_BNode.is_forbidden(to_EdgeId(gl_i, el , size()))) {
+                        if (counter == 0)
+                            choice1 = el;
+                        if (counter == 1)
+                            choice2 = el;
+                        counter++;
+                        if (counter > 1)
+                            break;
+                    }
+                }
+                BNode q1(current_BNode, *this, to_EdgeId(gl_i, choice1, this->size())),
+                    q2(current_BNode,
+                       *this,
+                       to_EdgeId(gl_i, choice1, this->size()),
+                       to_EdgeId(gl_i, choice1, this->size()));
+                Q.push(q1);
+                Q.push(q2);
+
+                BNode q3(current_BNode, *this,
+                         to_EdgeId(gl_i, choice1, this->size()),
+                         to_EdgeId(gl_i, choice2, this->size()),
+                         true);
+                Q.push(q3);
+
+                }
             }
         }
     }
-}
+
 
 template<class coord_type, class dist_type>
 void Instance<coord_type, dist_type>::print_optimal_length() {

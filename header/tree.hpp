@@ -16,53 +16,69 @@ using size_type = std::size_t;
 using NodeId = size_type;
 using EdgeId = size_type;
 
-class Tree : public TSP::Graph {
- public:
-  Tree(NodeId root, NodeId size) : TSP::Graph(size) {
-      _nodes.push_back(root);
-      _root = root;
-  }
-
-  TSP::NodeId predecessor(TSP::NodeId id) const {
-      auto k = this->node(id).neighbors().at(0);
-      if (k == TSP::invalid_node_id)
-          throw std::runtime_error("No neighbors on this node!");
-      else
-          return k;
-  }
-
-  const std::vector<NodeId> &nodes() const {
-      return _nodes;
-  }
-
-  const NodeId &root() const {
-      return _root;
-  }
- private:
-  NodeId _root;
-  std::vector<NodeId> _nodes;
-};
+//class Tree : public TSP::Graph {
+// public:
+//  Tree(NodeId root, NodeId size) : TSP::Graph(size) {
+//      _nodes.push_back(root);
+//      _root = root;
+//  }
+//
+//  TSP::NodeId predecessor(TSP::NodeId id) const {
+//      auto k = this->node(id).neighbors().at(0);
+//      if (k == TSP::invalid_node_id)
+//          throw std::runtime_error("No neighbors on this node!");
+//      else
+//          return k;
+//  }
+//
+//  const std::vector<NodeId> &nodes() const {
+//      return _nodes;
+//  }
+//
+//  const NodeId &root() const {
+//      return _root;
+//  }
+// private:
+//  NodeId _root;
+//  std::vector<NodeId> _nodes;
+//};
 
 class OneTree {
  public:
-  OneTree(NodeId root, size_t size) : size(size), MST(0, size - 1), _root(), _nodes(size), _edges(0) {
+  OneTree(NodeId root, size_t size) : size(size), //MST(0, size - 1)
+       _edges(0) {
       _nodes.push_back(Node()); //root = 0 !!
       for (NodeId node = 1; node < size; node++)
           _nodes.push_back(Node());
       num_nodes = _nodes.size();
   }
 
+  OneTree(const OneTree &obj) {
+      _root = obj._root;
+      size = obj.size;
+
+      _nodes = obj._nodes;
+      _edges = obj._edges;
+
+      num_edges = obj.num_edges;
+      num_nodes = obj.num_nodes;
+  }
+
+  void clear() {
+      _edges.clear();
+      num_edges = 0;
+      for (auto & node : _nodes) {
+          node._neighbors.clear();
+      }
+      _root._neighbors.clear();
+  }
   void add_edge(NodeId i, NodeId j) {
       if (i >= num_nodes || j >= num_nodes)
           throw std::runtime_error("Index out of range while adding edge to 1-tree");
-      if (i == 0 || j == 0)
-          if (i == 0)
-              _root.add_neighbor(j);
-          else
-              _root.add_neighbor(i);
-      else
-          MST.add_edge(i - 1, j - 1);
+
       _edges.push_back(to_EdgeId(i, j, size));
+      _nodes.at(i).add_neighbor(j);
+      _nodes.at(j).add_neighbor(i);
       num_edges++;
   }
 
@@ -82,7 +98,7 @@ class OneTree {
   }
 
  private:
-  Tree MST;
+//  Tree MST;
   Node _root;
   size_type size;
 
