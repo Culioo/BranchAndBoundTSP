@@ -26,8 +26,6 @@ using size_type = std::size_t;
 using NodeId = size_type;
 using EdgeId = size_type;
 
-
-
 template<class coord_type, class dist_type>
 class BranchingNode;
 
@@ -39,73 +37,15 @@ void compute_minimal_1_tree(OneTree &tree,
                             const std::vector<double> &lambda,
                             const Instance<coord_type, dist_type> &tsp,
                             const BranchingNode<coord_type, dist_type> &BNode) {
-    /*
-    // Initializing union find structure, i and j nodeIDs and a sorted vector
-    // which will contain the edges in an sorted order
-    Union_Find uf(tsp.size());
-    NodeId i = 0, j = 0;
-
-    std::vector<EdgeId> sorted(tsp.num_edges());
-    for (size_type index = 0; index < tsp.num_edges(); index++)
-        sorted.at(index) = index;
-
-    //compute modified weights c_\lambda and set the weight of required edges
-    // to -inf and for forbidden edges to +inf
-    std::vector<dist_type> mod_weights(tsp.num_edges(), 0);
-    for (const auto &el : BNode.get_forbidden())
-        mod_weights.at(el) = std::numeric_limits<dist_type>::max();
-    for (const auto &el : BNode.get_required())
-        mod_weights.at(el) = std::numeric_limits<dist_type>::min();
-
-
-    for (size_t edge = 0; edge < tsp.weights().size(); edge++) {
-        if (mod_weights.at(edge) == 0) {//double comparison with == is bad, but let's make it a TODO
-            NodeId v = 0, w = 0;
-            to_NodeId(edge, v, w, tsp.size());
-            mod_weights.at(edge) = tsp.weight(edge) + lambda[v] + lambda[w];
-        }
-    }
-    //Sort the array to compute an 1-tree via iterating over the edges
-    std::stable_sort(sorted.begin(), sorted.end(),
-                     [&](EdgeId ind1, EdgeId ind2) {
-                       return (mod_weights.at(ind1) <
-                           mod_weights.at(ind2));
-                     });
-
-    std::vector<NodeId> candidates;
-    candidates.reserve(tsp.size());
-    for (auto it = sorted.begin(); it != sorted.end(); it++) {
-        to_NodeId(*it, i, j, tsp.size());
-        if ((i == 0) && (0 != j) && (candidates.size() < 2))
-            candidates.push_back(j);
-        if ((i != j) && (i != 0) && (0 != j) && (tree.get_num_edges() < tsp.size()-1 )) {
-            EdgeId edge = to_EdgeId(i,j,tsp.size());
-            if ((uf._find(i) != uf._find(j))) {
-
-                assert(!BNode.is_forbidden(edge));
-                tree.add_edge(i, j);
-                uf._union(i, j);
-            }
-        }
-        if(candidates.size() == 2 && tree.get_num_edges() == tsp.size() - 2) break;
-    }
-    assert(tree.get_num_edges() == tsp.size() - 2);
-    // This should be okay since we forbid all edges where deg >= 3 could happen
-    assert(!BNode.is_forbidden(to_EdgeId(0,candidates.at(0),tsp.size())));
-    assert(!BNode.is_forbidden(to_EdgeId(0,candidates.at(1),tsp.size())));
-    tree.add_edge(0, candidates.at(0));
-    tree.add_edge(0, candidates.at(1));
-     */
 
     //compute modified weights c_\lambda and set the weight of required edges
     // to -inf and for forbidden edges to +inf
     std::vector<dist_type> mod_weights(tsp.num_edges(), 0);
 
-
     for (size_t edge = 0; edge < tsp.weights().size(); edge++) {
-            NodeId v = 0, w = 0;
-            to_NodeId(edge, v, w, tsp.size());
-            mod_weights.at(edge) = tsp.weight(edge) + lambda[v] + lambda[w];
+        NodeId v = 0, w = 0;
+        to_NodeId(edge, v, w, tsp.size());
+        mod_weights.at(edge) = tsp.weight(edge) + lambda[v] + lambda[w];
     }
 
     for (const auto &el : BNode.get_forbidden())
@@ -114,18 +54,18 @@ void compute_minimal_1_tree(OneTree &tree,
         mod_weights.at(el) = -1; //std::numeric_limits<dist_type>::min();
 
 
-    typedef std::pair<dist_type, int > iPair;
+    typedef std::pair<dist_type, int> iPair;
     // Create a priority queue to store vertices that
     // are being preinMST. This is weird syntax in C++.
     // Refer below link for details of this syntax
     // http://geeksquiz.com/implement-min-heap-using-stl/
-    std::priority_queue< iPair, std::vector <iPair> , std::greater<iPair> > pq;
+    std::priority_queue<iPair, std::vector<iPair>, std::greater<iPair> > pq;
 
     int src = 1; // Taking vertex 0 as source
     size_type n = tsp.size();
     // Create a vector for keys and initialize all
     // keys as infinite (INF)
-    std::vector<double> key(n, std::numeric_limits<double>::max()/2.);
+    std::vector<double> key(n, std::numeric_limits<double>::max() / 2.);
 
     // To store parent array which in turn store MST
     std::vector<int> parent(n, -1);
@@ -146,17 +86,16 @@ void compute_minimal_1_tree(OneTree &tree,
         // has to be done this way to keep the vertices
         // sorted key (key must be first item
         // in pair)
-        int u = pq.top().second;
+        NodeId u = pq.top().second;
         pq.pop();
 
         inMST[u] = true;  // Include vertex in MST
 
-        for (NodeId i = 1 ; i < n ; i++)
-        {
-            if (i!= u) {
+        for (NodeId i = 1; i < n; i++) {
+            if (i != u) {
                 // Get vertex label and weight of current adjacent
                 // of u.
-                dist_type weight = mod_weights.at(to_EdgeId(u,i,n));
+                dist_type weight = mod_weights.at(to_EdgeId(u, i, n));
 
                 //  If v is not in MST and weight of (u,v) is smaller
                 // than current key of v
@@ -174,60 +113,59 @@ void compute_minimal_1_tree(OneTree &tree,
         tree.add_edge(k, parent[k]);
     }
     NodeId smallest = 1;
-    for(NodeId k = 2; k < n; k++){
-        if(mod_weights.at(to_EdgeId(0, k, n)) < mod_weights.at(to_EdgeId(0, smallest, n))){
+    for (NodeId k = 2; k < n; k++) {
+        if (mod_weights.at(to_EdgeId(0, k, n)) < mod_weights.at(to_EdgeId(0, smallest, n))) {
             smallest = k;
         }
 
     }
 
-    NodeId smallest1 =1;
-    if(smallest == 1) smallest1 = 2;
-    for(NodeId k = 2; k < n; k++){
-        if(k != smallest){
-            if(mod_weights.at(to_EdgeId(0, k, n)) < mod_weights.at(to_EdgeId(0, smallest1, n))){
+    NodeId smallest1 = 1;
+    if (smallest == 1) smallest1 = 2;
+    for (NodeId k = 2; k < n; k++) {
+        if (k != smallest) {
+            if (mod_weights.at(to_EdgeId(0, k, n)) < mod_weights.at(to_EdgeId(0, smallest1, n))) {
                 smallest1 = k;
             }
         }
     }
-    tree.add_edge(0,smallest);
-    tree.add_edge(0,smallest1);
+    tree.add_edge(0, smallest);
+    tree.add_edge(0, smallest1);
 }
 
 template<class coord_type, class dist_type>
 dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
-                    std::vector<double> & lambda,
+                    std::vector<double> &lambda,
                     OneTree &tree,
                     const BranchingNode<coord_type, dist_type> &bn,
                     bool root = false) {
     size_type n = tsp.size();
     std::vector<dist_type> sol_vector;
-    std::vector<double> lambda_max(lambda.size(),0), lambda_tmp(lambda) ;
+    std::vector<double> lambda_max(lambda.size(), 0), lambda_tmp(lambda);
 
     OneTree tree_max(tree), tree_tmp(tree);
     double t_0 = 0., del_0 = 0., deldel = 0.;
     size_t max_el = 0;
     size_t N = std::ceil(n / 4.) + 5;
     if (root) {
-        N =  std::ceil(n*n / 50.) + n +  15;
+        N = std::ceil(n * n / 50.) + n + 15;
     }
     compute_minimal_1_tree<coord_type, dist_type>(tree, lambda_tmp, tsp, bn);
-    if(root){
+    if (root) {
         dist_type sum = 0;
         for (const auto &el : tree.get_edges())
             sum += tsp.weight(el);
-        t_0 = sum/(2.*n);
-    }
-    else{
+        t_0 = sum / (2. * n);
+    } else {
         t_0 = 0;
-        for(NodeId i = 0; i < n; i++){
+        for (NodeId i = 0; i < n; i++) {
             t_0 += fabs(lambda.at(i));
         }
-        t_0 *= 1./(2.*n);
+        t_0 *= 1. / (2. * n);
     }
-        //t_0 = 1./(2. * n) * std::accumulate(lambda.begin(), lambda.end(), 0.);
+    //t_0 = 1./(2. * n) * std::accumulate(lambda.begin(), lambda.end(), 0.);
 
-    deldel = t_0 / (N*N - N);
+    deldel = t_0 / (N * N - N);
     del_0 = 3. * t_0 / (2. * N);
 
     for (size_t i = 0; i < N; i++) {
@@ -247,7 +185,7 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
             }
             t_0 = t_0 - del_0;
             del_0 = del_0 - deldel;
-            tree_tmp  = tree;
+            tree_tmp = tree;
         }
 
         if (i > 0) {
@@ -257,20 +195,21 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
                 tree_max = tree;
             }
             for (size_t j = 0; j < lambda_tmp.size(); j++) {
-                lambda_tmp[j] += t_0 * (0.6 * (tree.get_node(j).degree() - 2.) + 0.4 * (tree_tmp.get_node(j).degree() - 2.));
+                lambda_tmp[j] +=
+                    t_0 * (0.6 * (tree.get_node(j).degree() - 2.) + 0.4 * (tree_tmp.get_node(j).degree() - 2.));
             }
             t_0 = t_0 - del_0;
             del_0 = del_0 - deldel;
             tree_tmp = tree;
         }
-        tree = OneTree(0, n);
+        tree = OneTree(n);
         compute_minimal_1_tree<coord_type, dist_type>(tree, lambda_tmp, tsp, bn);
     }
-    if(root){
+    if (root) {
         lambda = lambda_max;
     }
     tree = tree_max;
-    return std::ceil( (1.-EPS) * (*std::max_element(sol_vector.begin(), sol_vector.end())));
+    return std::ceil((1. - EPS) * (*std::max_element(sol_vector.begin(), sol_vector.end())));
 }
 
 template<class coord_type, class dist_type>
@@ -315,37 +254,42 @@ template<class coord_type, class dist_type>
 class BranchingNode {
  public:
   BranchingNode(const Instance<coord_type, dist_type> &tsp
-  ) : required(), forbidden(), lambda(size, 0), tree(0, size), size(tsp.size()), required_neighbors(size),
-  forbidden_neighbors(size) {
+  ) : size(tsp.size()), required(), required_neighbors(size), forbidden(),
+      forbidden_neighbors(size), lambda(size, 0), tree(size) {
       HK = Held_Karp(tsp, this->lambda, this->tree, *this, true);
   }
 
-  BranchingNode(const BranchingNode& obj) : tree(0,obj.size) ,       required_neighbors(obj.required_neighbors),
-                                            forbidden_neighbors(obj.forbidden_neighbors)
-  {
-      required = obj.required;
-      required_neighbors = obj.required_neighbors;
-      forbidden = obj.forbidden;
-      size = obj.size;
-//      required_neighbors.at(i).neighbors() = obj.required_neighbors.at(i).neighbors();
-//      forbidden_neighbors.at(i).neighbors() = obj.forbidden_neighbors.at(i).neighbors();
-
-      tree = obj.tree;
-      lambda = obj.lambda;
-      HK = obj.HK;
+  BranchingNode(const BranchingNode &obj)
+      : size(obj.size),
+        required(obj.required),
+        required_neighbors(obj.required_neighbors),
+        forbidden(obj.forbidden),
+        forbidden_neighbors(obj.forbidden_neighbors),
+        lambda(obj.lambda),
+        tree(obj.tree),
+        HK(obj.HK) {
+//      required = obj.required;
+//      required_neighbors = obj.required_neighbors;
+//      forbidden = obj.forbidden;
+//      size = obj.size;
+////      required_neighbors.at(i).neighbors() = obj.required_neighbors.at(i).neighbors();
+////      forbidden_neighbors.at(i).neighbors() = obj.forbidden_neighbors.at(i).neighbors();
+//
+//      tree = obj.tree;
+//      lambda = obj.lambda;
+//      HK = obj.HK;
   }
 
   BranchingNode(const BranchingNode<coord_type, dist_type> &BNode,
                 const Instance<coord_type, dist_type> &tsp,
                 EdgeId e1
-  ) : required(BNode.get_required()),
-      forbidden(BNode.get_forbidden()),
-      lambda(BNode.get_lambda()),
-      tree(0, tsp.size()),
-      size(tsp.size()),
+  ) : size(tsp.size()),
+      required(BNode.get_required()),
       required_neighbors(BNode.required_neighbors),
-      forbidden_neighbors(BNode.forbidden_neighbors)
-      {
+      forbidden(BNode.get_forbidden()),
+      forbidden_neighbors(BNode.forbidden_neighbors),
+      lambda(BNode.get_lambda()),
+      tree(tsp.size()) {
 
       add_forbidden(e1);
       HK = Held_Karp(tsp, this->lambda, this->tree, *this);
@@ -357,14 +301,13 @@ class BranchingNode {
                 EdgeId e2
   ) : size(tsp.size()),
       required(BNode.get_required()),
-      forbidden(BNode.get_forbidden()),
-      lambda(BNode.get_lambda()),
-      tree(0, tsp.size()),
       required_neighbors(BNode.required_neighbors),
-      forbidden_neighbors(BNode.forbidden_neighbors)
-       {
-           add_required(e1);
-           add_forbidden(e2);
+      forbidden(BNode.get_forbidden()),
+      forbidden_neighbors(BNode.forbidden_neighbors),
+      lambda(BNode.get_lambda()),
+      tree(tsp.size()) {
+      add_required(e1);
+      add_forbidden(e2);
       HK = Held_Karp(tsp, this->lambda, this->tree, *this);
   }
 
@@ -375,11 +318,11 @@ class BranchingNode {
                 bool both_req
   ) : size(tsp.size()),
       required(BNode.get_required()),
-      forbidden(BNode.get_forbidden()),
-      lambda(BNode.get_lambda()),
-      tree(0, tsp.size()),
       required_neighbors(BNode.required_neighbors),
-      forbidden_neighbors(BNode.forbidden_neighbors){
+      forbidden(BNode.get_forbidden()),
+      forbidden_neighbors(BNode.forbidden_neighbors),
+      lambda(BNode.get_lambda()),
+      tree(tsp.size()) {
 
       if (both_req) {
           add_required(e1);
@@ -388,28 +331,25 @@ class BranchingNode {
       HK = Held_Karp(tsp, this->lambda, this->tree, *this);
   }
 
-  bool operator<( const BranchingNode<coord_type, dist_type>& rhs) const;
+  bool operator<(const BranchingNode<coord_type, dist_type> &rhs) const;
 
-  const EdgeId reverse_edge(EdgeId e, size_type n) const {
+  EdgeId reverse_edge(EdgeId e, size_type n) const {
       NodeId i = 0, j = 0;
-      to_NodeId(e, i , j , n);
-      return j* n + i;
+      to_NodeId(e, i, j, n);
+      return j * n + i;
   }
 
   bool is_required(EdgeId id) const {
 //      assert((std::find(required.begin(), required.end(), id) == required.end() )
 //          == ( std::find(required.begin(), required.end(), reverse_edge(id,size)) == required.end()) );
       return (std::find(required.begin(), required.end(), id) != required.end()
-      && std::find(required.begin(), required.end(), reverse_edge(id,size)) != required.end())
-          ;
+          && std::find(required.begin(), required.end(), reverse_edge(id, size)) != required.end());
   }
 
   bool is_forbidden(EdgeId id) const {
       return (std::find(forbidden.begin(), forbidden.end(), id) != forbidden.end()
-          && std::find(forbidden.begin(), forbidden.end(), reverse_edge(id,size)) != forbidden.end());
+          && std::find(forbidden.begin(), forbidden.end(), reverse_edge(id, size)) != forbidden.end());
   }
-
-
 
   void forbid(NodeId idx, EdgeId e1, EdgeId e2) {
 //      EdgeId edge_start = to_EdgeId(idx, 0, size);
@@ -424,7 +364,7 @@ class BranchingNode {
   }
 
   void admit(NodeId idx) {
-      for (NodeId k = 0; k < size; k++){
+      for (NodeId k = 0; k < size; k++) {
           if (idx != k) {
               EdgeId edge = to_EdgeId(idx, k, size);
               if (!is_forbidden(edge))
@@ -432,7 +372,6 @@ class BranchingNode {
           }
       }
   }
-
 
   bool push_required(EdgeId e) {
       if (is_required(e))
@@ -447,52 +386,49 @@ class BranchingNode {
       return true;
   }
 
-
   void add_required(EdgeId e) {
       // hier pushen wir die edges entsprechend
       if (!push_required(e))
           return;
-      NodeId i = 0, j= 0;
-      to_NodeId(e,i,j,size);
+      NodeId i = 0, j = 0;
+      to_NodeId(e, i, j, size);
 
       if (required_neighbors.at(i).degree() == 2)
-          forbid(i,to_EdgeId(i,required_neighbors.at(i).neighbors().at(0),size),
-                 to_EdgeId(i,required_neighbors.at(i).neighbors().at(1),size));
+          forbid(i, to_EdgeId(i, required_neighbors.at(i).neighbors().at(0), size),
+                 to_EdgeId(i, required_neighbors.at(i).neighbors().at(1), size));
       if (required_neighbors.at(j).degree() == 2)
-          forbid(j,to_EdgeId(j,required_neighbors.at(j).neighbors().at(0),size),
-                 to_EdgeId(j,required_neighbors.at(j).neighbors().at(1),size));
+          forbid(j, to_EdgeId(j, required_neighbors.at(j).neighbors().at(0), size),
+                 to_EdgeId(j, required_neighbors.at(j).neighbors().at(1), size));
   }
 
   bool push_forbidden(EdgeId e) {
       if (is_forbidden(e))
           return false;
       assert(!is_required(e));
-      NodeId i = 0, j= 0;
-      to_NodeId(e,i,j,size);
+      NodeId i = 0, j = 0;
+      to_NodeId(e, i, j, size);
       forbidden.push_back(e);
       forbidden_neighbors[i].add_neighbor(j);
-      forbidden.push_back(reverse_edge(e,size));
+      forbidden.push_back(reverse_edge(e, size));
       forbidden_neighbors[j].add_neighbor(i);
       return true;
   }
 
-
   void add_forbidden(EdgeId e) {
       // hier pushen wir die edges entsprechend
-      if( !push_forbidden(e))
+      if (!push_forbidden(e))
           return;
-      NodeId i = 0, j= 0;
-      to_NodeId(e,i,j,size);
+      NodeId i = 0, j = 0;
+      to_NodeId(e, i, j, size);
 
-      if (forbidden_neighbors.at(i).degree() == size- 3) {
+      if (forbidden_neighbors.at(i).degree() == size - 3) {
           admit(i);
       }
-      if (forbidden_neighbors.at(j).degree() == size- 3) {
+      if (forbidden_neighbors.at(j).degree() == size - 3) {
           admit(j);
       }
 
   }
-
 
 /*
 //  void push_required(EdgeId e, const BranchingNode<coord_type, dist_type> &BNode) {
@@ -651,7 +587,7 @@ class BranchingNode {
       return this->HK;
   }
 
-  const std::vector<Node> & get_required_neighbors() const {
+  const std::vector<Node> &get_required_neighbors() const {
       return required_neighbors;
   }
 
