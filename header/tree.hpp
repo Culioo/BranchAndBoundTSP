@@ -16,63 +16,37 @@ using size_type = std::size_t;
 using NodeId = size_type;
 using EdgeId = size_type;
 
-//class Tree : public TSP::Graph {
-// public:
-//  Tree(NodeId root, NodeId size) : TSP::Graph(size) {
-//      _nodes.push_back(root);
-//      _root = root;
-//  }
-//
-//  TSP::NodeId predecessor(TSP::NodeId id) const {
-//      auto k = this->node(id).neighbors().at(0);
-//      if (k == TSP::invalid_node_id)
-//          throw std::runtime_error("No neighbors on this node!");
-//      else
-//          return k;
-//  }
-//
-//  const std::vector<NodeId> &nodes() const {
-//      return _nodes;
-//  }
-//
-//  const NodeId &root() const {
-//      return _root;
-//  }
-// private:
-//  NodeId _root;
-//  std::vector<NodeId> _nodes;
-//};
-
+/*
+ * General Intentions
+ * Given, that we are in the namespace TSP one might think about different trees that could be implemented.
+ * Here in particular, we only implement the 1-Tree structure needed by Held-Karp Lower Bound Algorithm.
+ * In fact, it's akin to a graph class, but with different constructor and a narrow use for further
+ * programming. Formally, one would construct 1-trees such that they share inheritage with a tree and/or
+ * a graph. Here, only the Node class is used.
+ */
+/**
+ * @class OneTree
+ * 1-tree implementation as a container for Nodes and meta information
+ */
 class OneTree {
  public:
-  OneTree(size_t size) : size(size), //MST(0, size - 1)
-                                      _edges(0) {
-      _nodes.push_back(Node()); //root = 0 !!
+  /**
+   * Only constructor. Initializes the meta information and edge vector
+   * @param size size of the tree in terms of Nodes
+   */
+  OneTree(size_t size) : size(size), _edges(0) {
+      _nodes.push_back(Node()); // root pushback. Here, root is always 0
       for (NodeId node = 1; node < size; node++)
           _nodes.push_back(Node());
       num_nodes = _nodes.size();
       num_edges = 0;
   }
 
-//  OneTree(const OneTree &obj) {
-//      _root = obj._root;
-//      size = obj.size;
-//
-//      _nodes = obj._nodes;
-//      _edges = obj._edges;
-//
-//      num_edges = obj.num_edges;
-//      num_nodes = obj.num_nodes;
-//  }
-
-  void clear() {
-      _edges.clear();
-      num_edges = 0;
-      for (auto &node : _nodes) {
-          node._neighbors.clear();
-      }
-      _root._neighbors.clear();
-  }
+  /**
+   * Adding an edge by their NodeIds. Requires the to_Edge functionality from @headerfile util.hpp
+   * @param i first node
+   * @param j second node
+   */
   void add_edge(NodeId i, NodeId j) {
       if (i >= num_nodes || j >= num_nodes)
           throw std::runtime_error("Index out of range while adding edge to 1-tree");
@@ -82,7 +56,7 @@ class OneTree {
       _nodes.at(j).add_neighbor(i);
       num_edges++;
   }
-
+  //getter functions
   const size_type &get_num_edges() const {
       return num_edges;
   }
@@ -99,8 +73,7 @@ class OneTree {
   }
 
  private:
-//  Tree MST;
-  Node _root;
+  //names are self-explainatory
   size_type size;
 
   std::vector<Node> _nodes;

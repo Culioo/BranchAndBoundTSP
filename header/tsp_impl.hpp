@@ -50,7 +50,7 @@ Instance<coord_type, dist_type>::Instance(const std::string &filename) {
         if (option != "EOF") {
             try {
                 strstr >> coord_x >> coord_y;
-                std::cout << option << ' ' << coord_x << ' ' << coord_y << std::endl;
+                //std::cout << option << ' ' << coord_x << ' ' << coord_y << std::endl; //comment in for terminal output
                 _nodes.push_back(std::stoi(option) - 1), x.push_back(coord_x), y.push_back(coord_y);
             }
             catch (int e) {
@@ -103,7 +103,6 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                 }
 
                 assert(gl_i != 0);
-
                 size_t counter = 0;
                 for (const auto &el : current_BNode.get_tree().get_node(gl_i).neighbors()) {
                     if (!current_BNode.is_required(to_EdgeId(gl_i, el, size()))) {

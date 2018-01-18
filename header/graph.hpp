@@ -74,61 +74,6 @@ class Node {
   std::vector<NodeId> _neighbors;
 }; // class Node
 
-/**
-   @class Graph
-
-   @brief A @c Graph stores an array of @c Node s, but no array of edges. The list of edges is implicitly given
-   by the fact that the nodes know their neighbors.
-
-   This class models undirected graphs only (in the sense that the method @c add_edge(node1, node2) adds both @c node1
-   as a neighbor of @c node2 and @c node2 as a neighbor of @c node1). It also forbids loops, but parallel edges are
-   legal.
-
-   @warning Nodes are numbered starting at 0, as is usually done in programming,
-    instead starting at 1, as is done in the DIMACS format that your program should take as input!
-    Be careful.
-**/
-class Graph {
- public:
-  typedef std::size_t size_type;
-  /**
-     @brief Creates a @c Graph with @c num_nodes isolated nodes.
-
-     The number of nodes in the graph currently cannot be changed. You can only add edges between the existing nodes.
-  **/
-  Graph(NodeId const num_nodes);
-
-  /** @return The number of nodes in the graph. **/
-  NodeId num_nodes() const;
-
-  /** @return The number of edges in the graph. **/
-  size_type num_edges() const;
-
-  /**
-     @return A reference to the id-th entry in the array of @c Node s of this graph.
-  **/
-  Node const &node(NodeId const id) const;
-
-  /**
-     @brief Adds the edge <tt> {node1_id, node2_id} </tt> to this graph.
-
-     Checks that @c node1_id and @c node2_id are distinct and throws an exception otherwise.
-     This method adds both @c node1_id as a neighbor of @c node2_id and @c node2_id as a neighbor of @c node1_id.
-
-     @warning Does not check that the edge does not already exist, so this class can be used to model non-simple graphs.
-  **/
-  void add_edge(NodeId node1_id, NodeId node2_id);
-
-  /**
-    @brief Prints the graph to the given ostream in DIMACS format.
-  **/
-  friend std::ostream &operator<<(std::ostream &str, Graph const &graph);
-
- private:
-  std::vector<Node> _nodes;
-  std::size_t _num_edges;
-}; // class Graph
-
 //BEGIN: Inline section
 
 inline
@@ -141,21 +86,7 @@ std::vector<NodeId> const &Node::neighbors() const {
     return _neighbors;
 }
 
-inline
-NodeId Graph::num_nodes() const {
-    return _nodes.size();
-}
 
-inline
-Graph::size_type Graph::num_edges() const {
-    return _num_edges;
-}
-
-inline
-Node const &Graph::node(NodeId const id) const {
-    // perform index checking
-    return _nodes.at(id);
-}
 
 
 
