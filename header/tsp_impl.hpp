@@ -14,6 +14,7 @@
 #include <queue>
 #include <numeric>
 #include "tree.hpp"
+
 namespace TSP {
 
 template<class coord_type, class dist_type>
@@ -239,7 +240,7 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
 
     dist_type upperBound = std::numeric_limits<dist_type>::max();
     std::priority_queue<BNode,
-                        std::vector<BNode>, std::less<BNode> > Q;
+                        std::vector<BNode>, std::greater<BNode> > Q;
     Q.push(BranchingNode<coord_type, dist_type>(*this)); // Adding empty node to Q
 
     while (!Q.empty()) {
@@ -343,7 +344,7 @@ void Instance<coord_type, dist_type>::print_optimal_tour(const std::string &file
 // --------------------------------------------------------
 
 template<class coord_type, class dist_type>
-bool BranchingNode<coord_type, dist_type>::operator<(const BranchingNode <coord_type, dist_type> &rhs) const {
+bool BranchingNode<coord_type, dist_type>::operator>(const BranchingNode <coord_type, dist_type> &rhs) const {
     return this->get_HK() > rhs.get_HK();
 }
 
