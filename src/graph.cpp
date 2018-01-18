@@ -1,7 +1,14 @@
+//
+// Modified by Alex Dyck and Leon Sievers ; last modified 1/18/18.
+//
+
+/**
+ * @file graph.cpp
+ *
+ * @brief one small function was not defined inline
+ */
 #include "../header/graph.hpp"
 
-#include <ostream>
-#include <stdexcept>
 
 namespace TSP {
 /////////////////////////////////////////////

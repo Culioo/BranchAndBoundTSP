@@ -1,10 +1,15 @@
 //
-// Created by leon on 06.01.18.
+// Created by Alex Dyck and Leon Sievers ; last modified 1/18/18.
 //
+
 
 #ifndef BRANCHANDBOUNDTSP_UTIL_HPP
 #define BRANCHANDBOUNDTSP_UTIL_HPP
-
+/**
+ * @file util.cpp
+ *
+ * @brief some helper functions in the TSP Framework used
+ */
 #include <iostream>
 #include <vector>
 #include <algorithm>

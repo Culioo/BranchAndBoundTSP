@@ -1,7 +1,14 @@
 //
-// Created by adyck and lsievers on 1/13/18.
+// Created by Alex Dyck and Leon Sievers ; last modified 1/18/18.
 //
 
+/**
+ * @file tsp_impl.hpp
+ *
+ * @brief Implementation details for the tsp.hpp. One might ask, why we are using a .hpp. Well,
+ * templates have to be beforehand which is achieved by putting them into the header. This also holds for
+ * their implementation. There is one other way, but this is the way conforming the current ISO
+ */
 #ifndef BRANCHANDBOUNDTSP_TSP_IMPL_HPP
 #define BRANCHANDBOUNDTSP_TSP_IMPL_HPP
 
@@ -17,6 +24,15 @@
 
 namespace TSP {
 
+/**
+ * computes a minimum-1-tree for a given BranchingNode
+ * @tparam coord_type
+ * @tparam dist_type
+ * @param tree space to save the optimal tree
+ * @param lambda if we are in the root node, we'll save our holy lambda here, else it's just the root lambda
+ * @param tsp The TSP Instance
+ * @param BNode the correspnding BranchingNode
+ */
 template<class coord_type, class dist_type>
 void compute_minimal_1_tree(TSP::OneTree &tree,
                             const std::vector<double> &lambda,
@@ -39,11 +55,12 @@ void compute_minimal_1_tree(TSP::OneTree &tree,
         mod_weights.at(el) = -1; //std::numeric_limits<dist_type>::min();
 
 
-    typedef std::pair<dist_type, int> iPair;
-    // PRIM MST Algorithm
-    std::priority_queue<iPair, std::vector<iPair>, std::greater<iPair> > pq;
+    // computing a MST on {2,..,n} by PRIM MST Algorithm
+    typedef std::pair<dist_type, int> Pair;
+    //instantiate our priority_queue properly
+    std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair> > pq;
 
-    int src = 1; // Taking vertex 0 as source
+    int src = 1; // Start at the first node != 0
     TSP::size_type n = tsp.size();
     // First, make all nodes unreachable
     std::vector<double> key(n, ::std::numeric_limits<double>::max() / 2.);
@@ -51,11 +68,9 @@ void compute_minimal_1_tree(TSP::OneTree &tree,
     // parent will give access to the second node in an edge for the MST
     std::vector<int> parent(n, -1);
 
-    // included vertices
-    std::vector<bool> inMST(n, false);
-
-    // Insert source itself in priority queue and initialize
-    // its key as 0.
+    // included vertices vector
+    std::vector<bool> MST_contained(n, false);
+    //start with the source....
     pq.push(std::make_pair(0, src));
     key[src] = 0;
 
@@ -63,12 +78,12 @@ void compute_minimal_1_tree(TSP::OneTree &tree,
         TSP::NodeId u = pq.top().second;
         pq.pop();
 
-        inMST[u] = true;  // Include vertex in MST
+        MST_contained[u] = true;  // Include vertex in MST
 
         for (TSP::NodeId i = 1; i < n; i++) {
             if (i != u) {
                 dist_type weight = mod_weights.at(to_EdgeId(u, i, n));
-                if (inMST[i] == false && key[i] > weight) {
+                if (MST_contained[i] == false && key[i] > weight) {
                     // Updating key of i
                     key[i] = weight;
                     pq.push(std::make_pair(key[i], static_cast<int>(i)));
@@ -77,10 +92,12 @@ void compute_minimal_1_tree(TSP::OneTree &tree,
             }
         }
     }
-
+    //Done with MST computation, add them to our tree
     for (TSP::NodeId k = 2; k < n; k++) {
-        tree.add_edge(k, parent[k]);
+        tree.add_edge(k, static_cast<NodeId >(parent[k]));
     }
+
+    //seek for smallest two edges incident to 0 ..
     TSP::NodeId smallest = 1;
     for (TSP::NodeId k = 2; k < n; k++) {
         if (mod_weights.at(to_EdgeId(0, k, n)) < mod_weights.at(to_EdgeId(0, smallest, n))) {
@@ -97,27 +114,41 @@ void compute_minimal_1_tree(TSP::OneTree &tree,
             }
         }
     }
+    // ..add them
     tree.add_edge(0, smallest);
     tree.add_edge(0, smallest1);
 }
 
+
+/**
+ * computes the Held-Karp lower bound
+ * @tparam coord_type
+ * @tparam dist_type
+ * @param tsp The TSP Instance
+ * @param lambda lambda set by root BranchingNode (or where to set for not BranchingNode)
+ * @param tree container for tree computation
+ * @param bn current BranchingNode
+ * @param root true, if we are in the root of our B'n'B tree
+ * @return
+ */
 template<class coord_type, class dist_type>
 dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
                     std::vector<double> &lambda,
                     TSP::OneTree &tree,
                     const TSP::BranchingNode<coord_type, dist_type> &bn,
                     bool root = false) {
+    // Initialization
     TSP::size_type n = tsp.size();
     std::vector<dist_type> sol_vector;
     std::vector<double> lambda_max(lambda.size(), 0), lambda_tmp(lambda);
-
     TSP::OneTree tree_max(tree), tree_tmp(tree);
     double t_0 = 0., del_0 = 0., deldel = 0.;
     size_t max_el = 0;
-    size_t N = ceil(n / 4.) + 5;
+    size_t N = std::ceil(n / 4.) + 5;
     if (root) {
-        N = ceil(n * n / 50.) + n + 15;
+        N = std::ceil(n * n / 50.) + n + 15;
     }
+    // First tree computation to obtain t_0, del_0 , deldel
     compute_minimal_1_tree<coord_type, dist_type>(tree, lambda_tmp, tsp, bn);
     if (root) {
         dist_type sum = 0;
@@ -136,14 +167,15 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
     del_0 = 3. * t_0 / (2. * N);
 
     for (size_t i = 0; i < N; i++) {
+        //Computing the sum we later on want to maximize over
         dist_type sum = 0, sum2 = 0;
         for (const auto &el : tree.get_edges())
             sum += tsp.weight(el);
         for (size_t node = 0; node < n; node++)
             sum2 += (tree.get_node(node).degree() - 2.) * lambda_tmp[node];
-        sol_vector.push_back(sum + sum2);
+        sol_vector.push_back(sum + sum2); //we save all, not necessary, but nice for understanding
 
-        if (i == 0) {
+        if (i == 0) { // the first iteration is slightly different..
             tree_max = tree;
             lambda_max = lambda_tmp;
 
@@ -155,7 +187,7 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
             tree_tmp = tree;
         }
 
-        if (i > 0) {
+        if (i > 0) { // ..then this one
             if (sol_vector[max_el] < sol_vector[i]) {
                 lambda_max = lambda_tmp;
                 max_el = i;
@@ -172,13 +204,19 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
         tree = TSP::OneTree(n);
         compute_minimal_1_tree<coord_type, dist_type>(tree, lambda_tmp, tsp, bn);
     }
-    if (root) {
+    if (root) { //Setting the holy lambda
         lambda = lambda_max;
     }
     tree = tree_max;
+    // Multiplying by 1. - EPS whereas EPS is a Macro defined to 10e-7 since we do not want to
+    // obtain a lower bound larger than the optimum solution. This could occur due to
+    // floating point computations .
     return std::ceil((1. - EPS) * (*std::max_element(sol_vector.begin(), sol_vector.end())));
 }
 
+// ---------------------------------------------------------------------------------
+// ---------------    TSP::Instance section ----------------------------------------
+// ---------------------------------------------------------------------------------
 template<class coord_type, class dist_type>
 Instance<coord_type, dist_type>::Instance(const std::string &filename) {
     std::ifstream file(filename);
@@ -214,7 +252,6 @@ Instance<coord_type, dist_type>::Instance(const std::string &filename) {
         std::stringstream strstr;
         strstr << line;
         strstr >> option;
-        // TODO: Capture if EOF is missing
         if (option != "EOF") {
             try {
                 strstr >> coord_x >> coord_y;
@@ -338,6 +375,8 @@ void Instance<coord_type, dist_type>::print_optimal_tour(const std::string &file
     file_to_print << "-1" << std::endl;
     file_to_print << "EOF" << std::endl;
 }
+
+// end class Instance section
 
 // --------------------------------------------------------
 // -------------------- BranchingNode section -------------

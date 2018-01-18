@@ -1,5 +1,15 @@
+//
+// Created by Alex Dyck and Leon Sievers ; last modified 1/18/18.
+//
+
+/**
+ * @file tsp.hpp
+ *
+ * @brief header file for the main TSP framework including the TSP Instance and the BranchingNode templates
+ */
 #ifndef BRANCHANDBOUNDTSP_TSP_HPP
 #define BRANCHANDBOUNDTSP_TSP_HPP
+
 
 #include <cstdlib>
 #include <fstream>
@@ -56,7 +66,7 @@ class Instance {
    * @param y1
    * @param x2
    * @param y2
-   * @return  rounded \f$ \sqrt(\abs(x_1 - x2)^2 + \abs(y_1 - y_2)^2)\f$
+   * @return  rounded \f$ \sqrt{(x_1 - x_2)^2  + (y_1 - y_2)^2}\f$
    */
   dist_type distance(coord_type x1, coord_type y1, coord_type x2, coord_type y2) {
       return std::lround(std::sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));

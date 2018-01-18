@@ -1,6 +1,12 @@
 //
-// Created by adyck on 1/15/18.
+// Created by Alex Dyck and Leon Sievers ; last modified 1/18/18.
 //
+
+/**
+ * @file tree.hpp
+ *
+ * @brief Definition of the OneTree class and general thoughts about a tree structure
+ */
 
 #ifndef BRANCHANDBOUNDTSP_TREE_HPP
 #define BRANCHANDBOUNDTSP_TREE_HPP
@@ -34,7 +40,7 @@ class OneTree {
    * Only constructor. Initializes the meta information and edge vector
    * @param size size of the tree in terms of Nodes
    */
-  OneTree(size_t size) : size(size), _edges(0) {
+  OneTree(size_t size) : _size(size), _edges(0) {
       _nodes.push_back(Node()); // root pushback. Here, root is always 0
       for (NodeId node = 1; node < size; node++)
           _nodes.push_back(Node());
@@ -51,7 +57,7 @@ class OneTree {
       if (i >= num_nodes || j >= num_nodes)
           throw std::runtime_error("Index out of range while adding edge to 1-tree");
 
-      _edges.push_back(to_EdgeId(i, j, size));
+      _edges.push_back(to_EdgeId(i, j, _size));
       _nodes.at(i).add_neighbor(j);
       _nodes.at(j).add_neighbor(i);
       num_edges++;
@@ -74,7 +80,7 @@ class OneTree {
 
  private:
   //names are self-explainatory
-  size_type size;
+  size_type _size;
 
   std::vector<Node> _nodes;
   std::vector<EdgeId> _edges;
@@ -83,6 +89,6 @@ class OneTree {
   size_type num_nodes;
 };
 
-};
+}
 
 #endif //BRANCHANDBOUNDTSP_TREE_HPP
