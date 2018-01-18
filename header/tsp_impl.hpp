@@ -196,7 +196,7 @@ void Instance<coord_type, dist_type>::print_optimal_tour(const std::string &file
 
 template <class coord_type, class dist_type>
 bool BranchingNode<coord_type, dist_type>::operator< (const BranchingNode <coord_type, dist_type> &rhs) const{
-    return this->get_HK() < rhs.get_HK();
+    return this->get_HK() > rhs.get_HK();
 }
 
 } //end namespace TSP
