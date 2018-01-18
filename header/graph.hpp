@@ -59,17 +59,18 @@ namespace TSP // for Edmonds
 
         /** @return The array of ids of the neighbors of this node. **/
         std::vector<NodeId> const &neighbors() const;
-
+      /**
+         @brief Adds @c id to the list of neighbors of this node.
+         @warning Does not check whether @c id is already in the list of neighbors (a repeated neighbor is legal, and
+         models parallel edges).
+         @warning Does not check whether @c id is the identity of the node itself (which would create a loop!).
+      **/
+      void add_neighbor(NodeId const id);
     private:
         friend class Graph;
         friend class OneTree;
-        /**
-           @brief Adds @c id to the list of neighbors of this node.
-           @warning Does not check whether @c id is already in the list of neighbors (a repeated neighbor is legal, and
-           models parallel edges).
-           @warning Does not check whether @c id is the identity of the node itself (which would create a loop!).
-        **/
-        void add_neighbor(NodeId const id);
+        friend class BranchingTree;
+
 
         std::vector<NodeId> _neighbors;
     }; // class Node

@@ -74,18 +74,19 @@ class OneTree {
       for (NodeId node = 1; node < size; node++)
           _nodes.push_back(Node());
       num_nodes = _nodes.size();
+      num_edges = 0;
   }
 
-  OneTree(const OneTree &obj) {
-      _root = obj._root;
-      size = obj.size;
-
-      _nodes = obj._nodes;
-      _edges = obj._edges;
-
-      num_edges = obj.num_edges;
-      num_nodes = obj.num_nodes;
-  }
+//  OneTree(const OneTree &obj) {
+//      _root = obj._root;
+//      size = obj.size;
+//
+//      _nodes = obj._nodes;
+//      _edges = obj._edges;
+//
+//      num_edges = obj.num_edges;
+//      num_nodes = obj.num_nodes;
+//  }
 
   void clear() {
       _edges.clear();
