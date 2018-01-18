@@ -1,16 +1,186 @@
 //
-// Created by adyck on 1/13/18.
+// Created by adyck and lsievers on 1/13/18.
 //
 
 #ifndef BRANCHANDBOUNDTSP_TSP_IMPL_HPP
 #define BRANCHANDBOUNDTSP_TSP_IMPL_HPP
 
 #include <cassert>
+#include <fstream>
+#include <algorithm>
+#include <cmath>
+#include <vector>
+#include <sstream>
+#include <queue>
+#include <numeric>
+#include "tree.hpp"
 namespace TSP {
+
+template<class coord_type, class dist_type>
+void compute_minimal_1_tree(TSP::OneTree &tree,
+                            const std::vector<double> &lambda,
+                            const TSP::Instance<coord_type, dist_type> &tsp,
+                            const TSP::BranchingNode<coord_type, dist_type> &BNode) {
+
+    //compute modified weights c_\lambda and set the weight of required edges
+    // to -inf and for forbidden edges to +inf
+    std::vector<dist_type> mod_weights(tsp.num_edges(), 0);
+
+    for (size_t edge = 0; edge < tsp.weights().size(); edge++) {
+        TSP::NodeId v = 0, w = 0;
+        to_NodeId(edge, v, w, tsp.size());
+        mod_weights.at(edge) = tsp.weight(edge) + lambda[v] + lambda[w];
+    }
+
+    for (const auto &el : BNode.get_forbidden())
+        mod_weights.at(el) = std::numeric_limits<dist_type>::max();
+    for (const auto &el : BNode.get_required())
+        mod_weights.at(el) = -1; //std::numeric_limits<dist_type>::min();
+
+
+    typedef std::pair<dist_type, int> iPair;
+    // PRIM MST Algorithm
+    std::priority_queue<iPair, std::vector<iPair>, std::greater<iPair> > pq;
+
+    int src = 1; // Taking vertex 0 as source
+    TSP::size_type n = tsp.size();
+    // First, make all nodes unreachable
+    std::vector<double> key(n, ::std::numeric_limits<double>::max() / 2.);
+
+    // parent will give access to the second node in an edge for the MST
+    std::vector<int> parent(n, -1);
+
+    // included vertices
+    std::vector<bool> inMST(n, false);
+
+    // Insert source itself in priority queue and initialize
+    // its key as 0.
+    pq.push(std::make_pair(0, src));
+    key[src] = 0;
+
+    while (!pq.empty()) {
+        TSP::NodeId u = pq.top().second;
+        pq.pop();
+
+        inMST[u] = true;  // Include vertex in MST
+
+        for (TSP::NodeId i = 1; i < n; i++) {
+            if (i != u) {
+                dist_type weight = mod_weights.at(to_EdgeId(u, i, n));
+                if (inMST[i] == false && key[i] > weight) {
+                    // Updating key of i
+                    key[i] = weight;
+                    pq.push(std::make_pair(key[i], static_cast<int>(i)));
+                    parent[i] = u;
+                }
+            }
+        }
+    }
+
+    for (TSP::NodeId k = 2; k < n; k++) {
+        tree.add_edge(k, parent[k]);
+    }
+    TSP::NodeId smallest = 1;
+    for (TSP::NodeId k = 2; k < n; k++) {
+        if (mod_weights.at(to_EdgeId(0, k, n)) < mod_weights.at(to_EdgeId(0, smallest, n))) {
+            smallest = k;
+        }
+    }
+
+    TSP::NodeId smallest1 = 1;
+    if (smallest == 1) smallest1 = 2;
+    for (TSP::NodeId k = 2; k < n; k++) {
+        if (k != smallest) {
+            if (mod_weights.at(to_EdgeId(0, k, n)) < mod_weights.at(to_EdgeId(0, smallest1, n))) {
+                smallest1 = k;
+            }
+        }
+    }
+    tree.add_edge(0, smallest);
+    tree.add_edge(0, smallest1);
+}
+
+template<class coord_type, class dist_type>
+dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
+                    std::vector<double> &lambda,
+                    TSP::OneTree &tree,
+                    const TSP::BranchingNode<coord_type, dist_type> &bn,
+                    bool root = false) {
+    TSP::size_type n = tsp.size();
+    std::vector<dist_type> sol_vector;
+    std::vector<double> lambda_max(lambda.size(), 0), lambda_tmp(lambda);
+
+    TSP::OneTree tree_max(tree), tree_tmp(tree);
+    double t_0 = 0., del_0 = 0., deldel = 0.;
+    size_t max_el = 0;
+    size_t N = ceil(n / 4.) + 5;
+    if (root) {
+        N = ceil(n * n / 50.) + n + 15;
+    }
+    compute_minimal_1_tree<coord_type, dist_type>(tree, lambda_tmp, tsp, bn);
+    if (root) {
+        dist_type sum = 0;
+        for (const auto &el : tree.get_edges())
+            sum += tsp.weight(el);
+        t_0 = sum / (2. * n);
+    } else {
+        t_0 = 0;
+        for (TSP::NodeId i = 0; i < n; i++) {
+            t_0 += fabs(lambda.at(i));
+        }
+        t_0 *= 1. / (2. * n);
+    }
+
+    deldel = t_0 / (N * N - N);
+    del_0 = 3. * t_0 / (2. * N);
+
+    for (size_t i = 0; i < N; i++) {
+        dist_type sum = 0, sum2 = 0;
+        for (const auto &el : tree.get_edges())
+            sum += tsp.weight(el);
+        for (size_t node = 0; node < n; node++)
+            sum2 += (tree.get_node(node).degree() - 2.) * lambda_tmp[node];
+        sol_vector.push_back(sum + sum2);
+
+        if (i == 0) {
+            tree_max = tree;
+            lambda_max = lambda_tmp;
+
+            for (size_t j = 0; j < lambda_tmp.size(); j++) {
+                lambda_tmp[j] += t_0 * (tree.get_node(j).degree() - 2.);
+            }
+            t_0 = t_0 - del_0;
+            del_0 = del_0 - deldel;
+            tree_tmp = tree;
+        }
+
+        if (i > 0) {
+            if (sol_vector[max_el] < sol_vector[i]) {
+                lambda_max = lambda_tmp;
+                max_el = i;
+                tree_max = tree;
+            }
+            for (size_t j = 0; j < lambda_tmp.size(); j++) {
+                lambda_tmp[j] +=
+                    t_0 * (0.6 * (tree.get_node(j).degree() - 2.) + 0.4 * (tree_tmp.get_node(j).degree() - 2.));
+            }
+            t_0 = t_0 - del_0;
+            del_0 = del_0 - deldel;
+            tree_tmp = tree;
+        }
+        tree = TSP::OneTree(n);
+        compute_minimal_1_tree<coord_type, dist_type>(tree, lambda_tmp, tsp, bn);
+    }
+    if (root) {
+        lambda = lambda_max;
+    }
+    tree = tree_max;
+    return std::ceil((1. - EPS) * (*std::max_element(sol_vector.begin(), sol_vector.end())));
+}
+
 template<class coord_type, class dist_type>
 Instance<coord_type, dist_type>::Instance(const std::string &filename) {
     std::ifstream file(filename);
-
     if (!file.is_open())
         throw std::runtime_error("File " + filename + " could not be opened");
 
@@ -37,9 +207,6 @@ Instance<coord_type, dist_type>::Instance(const std::string &filename) {
 
     std::vector<coord_type> x, y;
     x.reserve(dimension), y.reserve(dimension);
-    //_nodes.reserve(dimension);
-    //_weights.reserve(dimension*(dimension-1));
-    //size_type id = std::numeric_limits<size_type>::max();
     coord_type coord_x = std::numeric_limits<coord_type>::max(), coord_y = std::numeric_limits<coord_type>::max();
     while (file.good()) {
         getline(file, line);
@@ -50,7 +217,6 @@ Instance<coord_type, dist_type>::Instance(const std::string &filename) {
         if (option != "EOF") {
             try {
                 strstr >> coord_x >> coord_y;
-                //std::cout << option << ' ' << coord_x << ' ' << coord_y << std::endl; //comment in for terminal output
                 _nodes.push_back(std::stoi(option) - 1), x.push_back(coord_x), y.push_back(coord_y);
             }
             catch (int e) {
@@ -72,17 +238,12 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
     typedef BranchingNode<coord_type, dist_type> BNode;
 
     dist_type upperBound = std::numeric_limits<dist_type>::max();
-    //upperBound = 0;
-//    for (size_t node = 0; node < this->size() -1; node++)
-//        upperBound += weight(to_EdgeId(node,node+1, this->size())) ;// we want to do a naive tsp tour!
-//    upperBound += weight(to_EdgeId(size()-1,0, this->size())) ;// we want to do a naive tsp tour
     std::priority_queue<BNode,
                         std::vector<BNode>, std::less<BNode> > Q;
     Q.push(BranchingNode<coord_type, dist_type>(*this)); // Adding empty node to Q
 
-    while (!Q.empty()) {//&& Q.top().get_HK() <= upperBound) { //
+    while (!Q.empty()) {
         BNode current_BNode(Q.top());
-//        std::cerr << upperBound << ' ' << current_BNode.get_HK() << std::endl;
         Q.pop();
         if (current_BNode.get_HK() >= upperBound)
             continue;
@@ -111,7 +272,6 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                             choice1 = el;
                         if (counter == 1)
                             choice2 = el;
-
                         counter++;
                         if (counter > 1)
                             break;
@@ -119,7 +279,6 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
                 }
                 assert(choice1 < std::numeric_limits<NodeId>::max());
                 assert(choice2 < std::numeric_limits<NodeId>::max());
-//                std::cout << choice1 << ' ' << choice2 << std::endl;
                 BNode q1(current_BNode, *this, to_EdgeId(gl_i, choice1, this->size())),
                     q2(current_BNode,
                        *this,
@@ -139,24 +298,6 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
         }
     }
     std::cerr << "Optimal Length " << upperBound << std::endl;
-
-}
-
-template<class coord_type, class dist_type>
-void Instance<coord_type, dist_type>::print_optimal_length() {
-    int length = 0;
-    for (int count = 0; count < this->_tour.size() - 1; count++) {
-        NodeId i = this->_tour.at(count);
-        NodeId j = this->_tour.at(count + 1);
-        EdgeId edge = i * this->size() + j;
-        length += this->_weights.at(edge);
-    }
-    NodeId i = this->_tour.at(this->size() - 1);
-    NodeId j = this->_tour.at(0);
-    EdgeId edge = i * this->size() + j;
-    length += this->_weights.at(edge);
-
-    std::cout << "The found tour is of length " << length << std::endl;
 }
 
 template<class coord_type, class dist_type>
@@ -174,9 +315,9 @@ void Instance<coord_type, dist_type>::print_optimal_tour(const std::string &file
     std::vector<bool> visited(n, false);
     std::vector<std::vector<NodeId> > x(n, std::vector<NodeId>());
 
-    for (const auto & el : _tour) {
-        NodeId v = 0, w=0;
-        to_NodeId(el, v, w,n);
+    for (const auto &el : _tour) {
+        NodeId v = 0, w = 0;
+        to_NodeId(el, v, w, n);
         x.at(v).push_back(w);
         x.at(w).push_back(v);
     }
@@ -184,11 +325,11 @@ void Instance<coord_type, dist_type>::print_optimal_tour(const std::string &file
     NodeId current = 0;
     file_to_print << 1 << std::endl;
     visited.at(current) = true;
-    for (size_t i = 0; i< n-1; i++) {
+    for (size_t i = 0; i < n - 1; i++) {
         NodeId neighbour = x.at(current).at(0);
         if (visited.at(neighbour))
             neighbour = x.at(current).at(1);
-        file_to_print << neighbour +1<< std::endl;
+        file_to_print << neighbour + 1 << std::endl;
         current = neighbour;
         visited.at(current) = true;
     }
@@ -197,10 +338,99 @@ void Instance<coord_type, dist_type>::print_optimal_tour(const std::string &file
     file_to_print << "EOF" << std::endl;
 }
 
+// --------------------------------------------------------
+// -------------------- BranchingNode section -------------
+// --------------------------------------------------------
+
 template<class coord_type, class dist_type>
 bool BranchingNode<coord_type, dist_type>::operator<(const BranchingNode <coord_type, dist_type> &rhs) const {
     return this->get_HK() > rhs.get_HK();
 }
+
+template<class coord_type, class dist_type>
+void BranchingNode<coord_type, dist_type>::forbid(NodeId idx, EdgeId e1, EdgeId e2) {
+    for (NodeId k = 0; k < size; k++) {
+        if (idx != k) {
+            EdgeId edge = to_EdgeId(idx, k, size);
+            if (edge != e1 && edge != e2) {
+                add_forbidden(edge);
+            }
+        }
+    }
+}
+
+template<class coord_type, class dist_type>
+void BranchingNode<coord_type, dist_type>::admit(NodeId idx) {
+    for (NodeId k = 0; k < size; k++) {
+        if (idx != k) {
+            EdgeId edge = to_EdgeId(idx, k, size);
+            if (!is_forbidden(edge))
+                add_required(edge);
+        }
+    }
+}
+
+template<class coord_type, class dist_type>
+bool BranchingNode<coord_type, dist_type>::push_required(EdgeId e) {
+    if (is_required(e))
+        return false;
+    assert(!is_forbidden(e));
+    NodeId i = 0, j = 0;
+    to_NodeId(e, i, j, size);
+    required.push_back(e);
+    required_neighbors.at(i).add_neighbor(j);
+    required.push_back(reverse_edge(e, size));
+    required_neighbors.at(j).add_neighbor(i);
+    return true;
+}
+
+template<class coord_type, class dist_type>
+void BranchingNode<coord_type, dist_type>::add_required(EdgeId e) {
+    if (!push_required(e))
+        return;
+    NodeId i = 0, j = 0;
+    to_NodeId(e, i, j, size);
+
+    if (required_neighbors.at(i).degree() == 2)
+        forbid(i, to_EdgeId(i, required_neighbors.at(i).neighbors().at(0), size),
+               to_EdgeId(i, required_neighbors.at(i).neighbors().at(1), size));
+    if (required_neighbors.at(j).degree() == 2)
+        forbid(j, to_EdgeId(j, required_neighbors.at(j).neighbors().at(0), size),
+               to_EdgeId(j, required_neighbors.at(j).neighbors().at(1), size));
+}
+
+template<class coord_type, class dist_type>
+bool BranchingNode<coord_type, dist_type>::push_forbidden(EdgeId e) {
+    if (is_forbidden(e))
+        return false;
+    assert(!is_required(e));
+    NodeId i = 0, j = 0;
+    to_NodeId(e, i, j, size);
+    forbidden.push_back(e);
+    forbidden_neighbors[i].add_neighbor(j);
+    forbidden.push_back(reverse_edge(e, size));
+    forbidden_neighbors[j].add_neighbor(i);
+    return true;
+}
+
+template<class coord_type, class dist_type>
+void BranchingNode<coord_type, dist_type>::add_forbidden(EdgeId e) {
+    // hier pushen wir die edges entsprechend
+    if (!push_forbidden(e))
+        return;
+    NodeId i = 0, j = 0;
+    to_NodeId(e, i, j, size);
+
+    if (forbidden_neighbors.at(i).degree() == size - 3) {
+        admit(i);
+    }
+    if (forbidden_neighbors.at(j).degree() == size - 3) {
+        admit(j);
+    }
+
+}
+
+// end class BranchingNone section
 
 } //end namespace TSP
 
