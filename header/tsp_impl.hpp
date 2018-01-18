@@ -218,7 +218,7 @@ dist_type Held_Karp(const TSP::Instance<coord_type, dist_type> &tsp,
 // ---------------    TSP::Instance section ----------------------------------------
 // ---------------------------------------------------------------------------------
 template<class coord_type, class dist_type>
-Instance<coord_type, dist_type>::Instance(const std::string &filename) {
+Instance<coord_type, dist_type>::Instance(const std::string &filename) : _length(0){
     std::ifstream file(filename);
     if (!file.is_open())
         throw std::runtime_error("File " + filename + " could not be opened");
@@ -336,6 +336,8 @@ void Instance<coord_type, dist_type>::compute_optimal_tour() {
         }
     }
     std::cerr << "Optimal Length " << upperBound << std::endl;
+
+    this->_length = upperBound;
 }
 
 template<class coord_type, class dist_type>

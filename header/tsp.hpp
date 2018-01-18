@@ -100,12 +100,15 @@ class Instance {
   const std::vector<dist_type> &weights() const {
       return _weights;
   }
-
+  const dist_type & length() {
+      return _length;
+  }
  private:
   std::vector<NodeId> _nodes;
   std::vector<dist_type> _weights;
   size_type dimension;
   std::vector<NodeId> _tour;
+  dist_type _length;
 };
 
 /**
