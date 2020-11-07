@@ -1,0 +1,90 @@
+\hypertarget{classTSP_1_1Node}{}\section{T\+SP\+:\+:Node Class Reference}
+\label{classTSP_1_1Node}\index{T\+S\+P\+::\+Node@{T\+S\+P\+::\+Node}}
+
+
+A {\ttfamily \hyperlink{classTSP_1_1Node}{Node}} stores an array of neighbors (via their ids).  
+
+
+
+
+{\ttfamily \#include $<$graph.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classTSP_1_1Node_a584e86cd92dca0c5a74531a829e8c916}\label{classTSP_1_1Node_a584e86cd92dca0c5a74531a829e8c916}} 
+typedef std\+::size\+\_\+t {\bfseries size\+\_\+type}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classTSP_1_1Node_a2efe21dcdee3229f926ea26bceb2e2bd}\label{classTSP_1_1Node_a2efe21dcdee3229f926ea26bceb2e2bd}} 
+\hyperlink{classTSP_1_1Node_a2efe21dcdee3229f926ea26bceb2e2bd}{Node} ()
+\begin{DoxyCompactList}\small\item\em Create an isolated node (you can add neighbors later). \end{DoxyCompactList}\item 
+size\+\_\+type \hyperlink{classTSP_1_1Node_aaaa462cf10f30be7648f7611112ec879}{degree} () const
+\item 
+std\+::vector$<$ Node\+Id $>$ const  \& \hyperlink{classTSP_1_1Node_afcd0a49f62af612b09db62ea0ca14856}{neighbors} () const
+\item 
+void \hyperlink{classTSP_1_1Node_a80097c7c5b257124bd4ca93af1c93d54}{add\+\_\+neighbor} (Node\+Id const id)
+\begin{DoxyCompactList}\small\item\em Adds {\ttfamily id} to the list of neighbors of this node. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classTSP_1_1Node_a6ae851d0f914a8468b466759124205de}\label{classTSP_1_1Node_a6ae851d0f914a8468b466759124205de}} 
+class {\bfseries One\+Tree}
+\item 
+\mbox{\Hypertarget{classTSP_1_1Node_a004da7014eb5ee1cc932402bf819998f}\label{classTSP_1_1Node_a004da7014eb5ee1cc932402bf819998f}} 
+class {\bfseries Branching\+Tree}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A {\ttfamily \hyperlink{classTSP_1_1Node}{Node}} stores an array of neighbors (via their ids). 
+
+\begin{DoxyNote}{Note}
+The neighbors are not necessarily ordered, so searching for a specific neighbor takes O(degree)-\/time. 
+\end{DoxyNote}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classTSP_1_1Node_a80097c7c5b257124bd4ca93af1c93d54}\label{classTSP_1_1Node_a80097c7c5b257124bd4ca93af1c93d54}} 
+\index{T\+S\+P\+::\+Node@{T\+S\+P\+::\+Node}!add\+\_\+neighbor@{add\+\_\+neighbor}}
+\index{add\+\_\+neighbor@{add\+\_\+neighbor}!T\+S\+P\+::\+Node@{T\+S\+P\+::\+Node}}
+\subsubsection{\texorpdfstring{add\+\_\+neighbor()}{add\_neighbor()}}
+{\footnotesize\ttfamily void T\+S\+P\+::\+Node\+::add\+\_\+neighbor (\begin{DoxyParamCaption}\item[{Node\+Id const}]{id }\end{DoxyParamCaption})}
+
+
+
+Adds {\ttfamily id} to the list of neighbors of this node. 
+
+{\ttfamily \hyperlink{classTSP_1_1Node}{Node}} definitions
+
+\begin{DoxyWarning}{Warning}
+Does not check whether {\ttfamily id} is already in the list of neighbors (a repeated neighbor is legal, and models parallel edges). 
+
+Does not check whether {\ttfamily id} is the identity of the node itself (which would create a loop!). 
+\end{DoxyWarning}
+\mbox{\Hypertarget{classTSP_1_1Node_aaaa462cf10f30be7648f7611112ec879}\label{classTSP_1_1Node_aaaa462cf10f30be7648f7611112ec879}} 
+\index{T\+S\+P\+::\+Node@{T\+S\+P\+::\+Node}!degree@{degree}}
+\index{degree@{degree}!T\+S\+P\+::\+Node@{T\+S\+P\+::\+Node}}
+\subsubsection{\texorpdfstring{degree()}{degree()}}
+{\footnotesize\ttfamily Node\+::size\+\_\+type T\+S\+P\+::\+Node\+::degree (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+The number of neighbors of this node. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTSP_1_1Node_afcd0a49f62af612b09db62ea0ca14856}\label{classTSP_1_1Node_afcd0a49f62af612b09db62ea0ca14856}} 
+\index{T\+S\+P\+::\+Node@{T\+S\+P\+::\+Node}!neighbors@{neighbors}}
+\index{neighbors@{neighbors}!T\+S\+P\+::\+Node@{T\+S\+P\+::\+Node}}
+\subsubsection{\texorpdfstring{neighbors()}{neighbors()}}
+{\footnotesize\ttfamily std\+::vector$<$ Node\+Id $>$ const  \& T\+S\+P\+::\+Node\+::neighbors (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+The array of ids of the neighbors of this node. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/\hyperlink{graph_8hpp}{graph.\+hpp}\item 
+src/\hyperlink{graph_8cpp}{graph.\+cpp}\end{DoxyCompactItemize}

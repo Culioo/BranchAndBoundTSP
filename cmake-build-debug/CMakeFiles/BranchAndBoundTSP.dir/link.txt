@@ -1,0 +1,1 @@
+/usr/bin/clang++   -std=c++14 -Wall -Wshadow  -Wextra -pedantic -g   -march=native  -Werror  -O2 -g    CMakeFiles/BranchAndBoundTSP.dir/src/graph.cpp.o CMakeFiles/BranchAndBoundTSP.dir/src/main.cpp.o  -o BranchAndBoundTSP 

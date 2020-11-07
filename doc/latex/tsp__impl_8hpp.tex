@@ -1,0 +1,33 @@
+\hypertarget{tsp__impl_8hpp}{}\section{header/tsp\+\_\+impl.hpp File Reference}
+\label{tsp__impl_8hpp}\index{header/tsp\+\_\+impl.\+hpp@{header/tsp\+\_\+impl.\+hpp}}
+
+
+Implementation details for the \hyperlink{tsp_8hpp}{tsp.\+hpp}. One might ask, why we are using a .hpp. Well, templates have to be beforehand which is achieved by putting them into the header. This also holds for their implementation. There is one other way, but this is the way conforming the current I\+SO.  
+
+
+{\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$queue$>$}\newline
+{\ttfamily \#include $<$numeric$>$}\newline
+{\ttfamily \#include \char`\"{}tree.\+hpp\char`\"{}}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespaceTSP}{T\+SP}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class coord\+\_\+type , class dist\+\_\+type $>$ }\\void \hyperlink{namespaceTSP_a99deb3994481658afb2f3d6fc4a56ac8}{T\+S\+P\+::compute\+\_\+minimal\+\_\+1\+\_\+tree} (\hyperlink{classTSP_1_1OneTree}{T\+S\+P\+::\+One\+Tree} \&tree, const std\+::vector$<$ double $>$ \&lambda, const \hyperlink{classTSP_1_1Instance}{T\+S\+P\+::\+Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&tsp, const \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&B\+Node)
+\item 
+{\footnotesize template$<$class coord\+\_\+type , class dist\+\_\+type $>$ }\\dist\+\_\+type \hyperlink{namespaceTSP_aa02b5d2fd460500a7e1e98b02da33813}{T\+S\+P\+::\+Held\+\_\+\+Karp} (const \hyperlink{classTSP_1_1Instance}{T\+S\+P\+::\+Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&tsp, std\+::vector$<$ double $>$ \&lambda, \hyperlink{classTSP_1_1OneTree}{T\+S\+P\+::\+One\+Tree} \&tree, const \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&bn, bool root=false)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementation details for the \hyperlink{tsp_8hpp}{tsp.\+hpp}. One might ask, why we are using a .hpp. Well, templates have to be beforehand which is achieved by putting them into the header. This also holds for their implementation. There is one other way, but this is the way conforming the current I\+SO. 
+

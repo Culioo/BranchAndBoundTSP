@@ -1,0 +1,304 @@
+\hypertarget{classTSP_1_1BranchingNode}{}\section{T\+SP\+:\+:Branching\+Node$<$ coord\+\_\+type, dist\+\_\+type $>$ Class Template Reference}
+\label{classTSP_1_1BranchingNode}\index{T\+S\+P\+::\+Branching\+Node$<$ coord\+\_\+type, dist\+\_\+type $>$@{T\+S\+P\+::\+Branching\+Node$<$ coord\+\_\+type, dist\+\_\+type $>$}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classTSP_1_1BranchingNode_ae008ce73dea24bb2da75887253900473}{Branching\+Node} (const \hyperlink{classTSP_1_1Instance}{Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&tsp)
+\item 
+\hyperlink{classTSP_1_1BranchingNode_a7c225b395563f9d64febea67bbbe5394}{Branching\+Node} (const \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&B\+Node, const \hyperlink{classTSP_1_1Instance}{Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&tsp, Edge\+Id e1)
+\item 
+\hyperlink{classTSP_1_1BranchingNode_a0e471c9be6f1fe647b71e8e7fd9f474e}{Branching\+Node} (const \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&B\+Node, const \hyperlink{classTSP_1_1Instance}{Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&tsp, Edge\+Id e1, Edge\+Id e2)
+\item 
+\hyperlink{classTSP_1_1BranchingNode_a23baf0d24e0be68e98b1e54815139026}{Branching\+Node} (const \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&B\+Node, const \hyperlink{classTSP_1_1Instance}{Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&tsp, Edge\+Id e1, Edge\+Id e2, bool both\+\_\+req)
+\item 
+bool \hyperlink{classTSP_1_1BranchingNode_a9eecc341459c700fb6c4d3f244abe90f}{operator$>$} (const \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&rhs) const
+\item 
+Edge\+Id \hyperlink{classTSP_1_1BranchingNode_a5f04fd8afc44fa3965d87e0e28fa01c0}{reverse\+\_\+edge} (Edge\+Id e, size\+\_\+type n) const
+\item 
+bool \hyperlink{classTSP_1_1BranchingNode_aaafb7471fc91431065e446bdcd132ff8}{is\+\_\+required} (Edge\+Id id) const
+\item 
+bool \hyperlink{classTSP_1_1BranchingNode_a95ec0c43a5d8aadeb586f76091f945af}{is\+\_\+forbidden} (Edge\+Id id) const
+\item 
+void \hyperlink{classTSP_1_1BranchingNode_a8944819d3f53e7224f6b73c1842b4f3d}{forbid} (Node\+Id idx, Edge\+Id e1, Edge\+Id e2)
+\item 
+void \hyperlink{classTSP_1_1BranchingNode_ad4073731142b55b1900e4537f0685301}{admit} (Node\+Id idx)
+\item 
+bool \hyperlink{classTSP_1_1BranchingNode_ab38488f897b8a3015f31803f2aec5115}{push\+\_\+required} (Edge\+Id e)
+\item 
+void \hyperlink{classTSP_1_1BranchingNode_ae0afd1a9cf5681b4ade85c1a081f60d9}{add\+\_\+required} (Edge\+Id e)
+\item 
+bool \hyperlink{classTSP_1_1BranchingNode_a77e84d1567c62587742790f2c985a7df}{push\+\_\+forbidden} (Edge\+Id e)
+\item 
+void \hyperlink{classTSP_1_1BranchingNode_a12c6b28e2499d4d050aacc31fbb3559c}{add\+\_\+forbidden} (Edge\+Id e)
+\item 
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a24e3bdbd186c0f45b50a37eac2dd118f}\label{classTSP_1_1BranchingNode_a24e3bdbd186c0f45b50a37eac2dd118f}} 
+const std\+::vector$<$ Edge\+Id $>$ \& {\bfseries get\+\_\+required} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a99608bdcd62a8e10b4c9b49600e17cf2}\label{classTSP_1_1BranchingNode_a99608bdcd62a8e10b4c9b49600e17cf2}} 
+const std\+::vector$<$ Edge\+Id $>$ \& {\bfseries get\+\_\+forbidden} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a24dec79e94727ce041847fa534ef73a7}\label{classTSP_1_1BranchingNode_a24dec79e94727ce041847fa534ef73a7}} 
+const std\+::vector$<$ dist\+\_\+type $>$ \& {\bfseries get\+\_\+lambda} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_ad8ecdf94a164b85c69756b1467a65192}\label{classTSP_1_1BranchingNode_ad8ecdf94a164b85c69756b1467a65192}} 
+std\+::vector$<$ dist\+\_\+type $>$ \& {\bfseries get\+\_\+lambda} ()
+\item 
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a591fc03c255efd9add346275c4729c0e}\label{classTSP_1_1BranchingNode_a591fc03c255efd9add346275c4729c0e}} 
+const \hyperlink{classTSP_1_1OneTree}{One\+Tree} \& {\bfseries get\+\_\+tree} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a2a4482a090381ff3b5e4b9faa1d06b60}\label{classTSP_1_1BranchingNode_a2a4482a090381ff3b5e4b9faa1d06b60}} 
+\hyperlink{classTSP_1_1OneTree}{One\+Tree} \& {\bfseries get\+\_\+tree} ()
+\item 
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a36ee877fe8fa43e2c46246cca4e8e054}\label{classTSP_1_1BranchingNode_a36ee877fe8fa43e2c46246cca4e8e054}} 
+const dist\+\_\+type {\bfseries get\+\_\+\+HK} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a9398221cb0c4e5dae420f190e2984458}\label{classTSP_1_1BranchingNode_a9398221cb0c4e5dae420f190e2984458}} 
+const std\+::vector$<$ \hyperlink{classTSP_1_1Node}{Node} $>$ \& {\bfseries get\+\_\+required\+\_\+neighbors} () const
+\item 
+bool \hyperlink{classTSP_1_1BranchingNode_a44790ceabe450e8cc5fc718fbd3780da}{tworegular} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class coord\+\_\+type, class dist\+\_\+type$>$\newline
+class T\+S\+P\+::\+Branching\+Node$<$ coord\+\_\+type, dist\+\_\+type $>$}
+
+\hyperlink{classTSP_1_1Node}{Node} in our branch and bound tree. It contains the lower bound for itself and saves temporary information as tree, lambda, required, forbidden.  Yeah, for the different branching nodes and their \textquotesingle{}to append\textquotesingle{} edges, we implemented separate constructors. It could be achieved by one, but this was easier, as we are lacking some structures necessary for this. -\/ Alex 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em coord\+\_\+type} & Container in which the Coordinates are given. Assumably double \\
+\hline
+{\em dist\+\_\+type} & Container in which the distances are given. Assumably double \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_ae008ce73dea24bb2da75887253900473}\label{classTSP_1_1BranchingNode_ae008ce73dea24bb2da75887253900473}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!Branching\+Node@{Branching\+Node}}
+\index{Branching\+Node@{Branching\+Node}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{Branching\+Node()}{BranchingNode()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+\hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::\hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} (\begin{DoxyParamCaption}\item[{const \hyperlink{classTSP_1_1Instance}{Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{tsp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+First Constructor\+: Constructs a \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} without any forbidden or required edges, i.\+e. the root of our B\textquotesingle{}n\textquotesingle{}B tree. 
+\begin{DoxyParams}{Parameters}
+{\em tsp} & The \hyperlink{namespaceTSP}{T\+SP} \hyperlink{classTSP_1_1Instance}{Instance} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a7c225b395563f9d64febea67bbbe5394}\label{classTSP_1_1BranchingNode_a7c225b395563f9d64febea67bbbe5394}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!Branching\+Node@{Branching\+Node}}
+\index{Branching\+Node@{Branching\+Node}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{Branching\+Node()}{BranchingNode()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+\hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::\hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} (\begin{DoxyParamCaption}\item[{const \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{B\+Node,  }\item[{const \hyperlink{classTSP_1_1Instance}{Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{tsp,  }\item[{Edge\+Id}]{e1 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Second Constructor\+: Constructs a \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} with $ F := F \cup e_1 $ 
+\begin{DoxyParams}{Parameters}
+{\em B\+Node} & predecessor \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} \\
+\hline
+{\em tsp} & The \hyperlink{namespaceTSP}{T\+SP} \hyperlink{classTSP_1_1Instance}{Instance} \\
+\hline
+{\em e1} & additional edge for forbidden edges \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a0e471c9be6f1fe647b71e8e7fd9f474e}\label{classTSP_1_1BranchingNode_a0e471c9be6f1fe647b71e8e7fd9f474e}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!Branching\+Node@{Branching\+Node}}
+\index{Branching\+Node@{Branching\+Node}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{Branching\+Node()}{BranchingNode()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+\hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::\hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} (\begin{DoxyParamCaption}\item[{const \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{B\+Node,  }\item[{const \hyperlink{classTSP_1_1Instance}{Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{tsp,  }\item[{Edge\+Id}]{e1,  }\item[{Edge\+Id}]{e2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Third Constructor\+: Constructs a \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} with $ R := R \cup {e_1} F := F \cup {e_2} $ 
+\begin{DoxyParams}{Parameters}
+{\em B\+Node} & predecessor \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} \\
+\hline
+{\em tsp} & The \hyperlink{namespaceTSP}{T\+SP} \hyperlink{classTSP_1_1Instance}{Instance} \\
+\hline
+{\em e1} & additional edge for required edges \\
+\hline
+{\em e2} & additional edge for forbidden edges \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a23baf0d24e0be68e98b1e54815139026}\label{classTSP_1_1BranchingNode_a23baf0d24e0be68e98b1e54815139026}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!Branching\+Node@{Branching\+Node}}
+\index{Branching\+Node@{Branching\+Node}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{Branching\+Node()}{BranchingNode()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+\hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::\hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} (\begin{DoxyParamCaption}\item[{const \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{B\+Node,  }\item[{const \hyperlink{classTSP_1_1Instance}{Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{tsp,  }\item[{Edge\+Id}]{e1,  }\item[{Edge\+Id}]{e2,  }\item[{bool}]{both\+\_\+req }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Fourth Constructor\+: Constructs a \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} with $ R := R \cup {e_1 } \cup {e_2}$ 
+\begin{DoxyParams}{Parameters}
+{\em B\+Node} & predecessor \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} \\
+\hline
+{\em tsp} & The \hyperlink{namespaceTSP}{T\+SP} \hyperlink{classTSP_1_1Instance}{Instance} \\
+\hline
+{\em e1} & additional edge for required edges \\
+\hline
+{\em e2} & additional edge for forbidden edges \\
+\hline
+{\em both\+\_\+req} & bool to distinguish third from forth constructor \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a12c6b28e2499d4d050aacc31fbb3559c}\label{classTSP_1_1BranchingNode_a12c6b28e2499d4d050aacc31fbb3559c}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!add\+\_\+forbidden@{add\+\_\+forbidden}}
+\index{add\+\_\+forbidden@{add\+\_\+forbidden}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{add\+\_\+forbidden()}{add\_forbidden()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+void \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::add\+\_\+forbidden (\begin{DoxyParamCaption}\item[{Edge\+Id}]{e }\end{DoxyParamCaption})}
+
+external function to add an edge e to forbidden 
+\begin{DoxyParams}{Parameters}
+{\em e} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_ae0afd1a9cf5681b4ade85c1a081f60d9}\label{classTSP_1_1BranchingNode_ae0afd1a9cf5681b4ade85c1a081f60d9}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!add\+\_\+required@{add\+\_\+required}}
+\index{add\+\_\+required@{add\+\_\+required}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{add\+\_\+required()}{add\_required()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+void \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::add\+\_\+required (\begin{DoxyParamCaption}\item[{Edge\+Id}]{e }\end{DoxyParamCaption})}
+
+external function to add an edge e to required 
+\begin{DoxyParams}{Parameters}
+{\em e} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_ad4073731142b55b1900e4537f0685301}\label{classTSP_1_1BranchingNode_ad4073731142b55b1900e4537f0685301}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!admit@{admit}}
+\index{admit@{admit}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{admit()}{admit()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+void \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::admit (\begin{DoxyParamCaption}\item[{Node\+Id}]{idx }\end{DoxyParamCaption})}
+
+adds non-\/forbidden edges of incident edges of idx to required 
+\begin{DoxyParams}{Parameters}
+{\em idx} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a8944819d3f53e7224f6b73c1842b4f3d}\label{classTSP_1_1BranchingNode_a8944819d3f53e7224f6b73c1842b4f3d}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!forbid@{forbid}}
+\index{forbid@{forbid}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{forbid()}{forbid()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+void \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::forbid (\begin{DoxyParamCaption}\item[{Node\+Id}]{idx,  }\item[{Edge\+Id}]{e1,  }\item[{Edge\+Id}]{e2 }\end{DoxyParamCaption})}
+
+forbids all edges incident to idx except e1,e2 
+\begin{DoxyParams}{Parameters}
+{\em idx} & \\
+\hline
+{\em e1} & \\
+\hline
+{\em e2} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a95ec0c43a5d8aadeb586f76091f945af}\label{classTSP_1_1BranchingNode_a95ec0c43a5d8aadeb586f76091f945af}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!is\+\_\+forbidden@{is\+\_\+forbidden}}
+\index{is\+\_\+forbidden@{is\+\_\+forbidden}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{is\+\_\+forbidden()}{is\_forbidden()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+bool \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::is\+\_\+forbidden (\begin{DoxyParamCaption}\item[{Edge\+Id}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Edge\+Id id \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true, if the undirected edge \{i,j\} is forbidden, else false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_aaafb7471fc91431065e446bdcd132ff8}\label{classTSP_1_1BranchingNode_aaafb7471fc91431065e446bdcd132ff8}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!is\+\_\+required@{is\+\_\+required}}
+\index{is\+\_\+required@{is\+\_\+required}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{is\+\_\+required()}{is\_required()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+bool \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::is\+\_\+required (\begin{DoxyParamCaption}\item[{Edge\+Id}]{id }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & Edge\+Id id \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true, if the undirected edge \{i,j\} is required, else false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a9eecc341459c700fb6c4d3f244abe90f}\label{classTSP_1_1BranchingNode_a9eecc341459c700fb6c4d3f244abe90f}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!operator$>$@{operator$>$}}
+\index{operator$>$@{operator$>$}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{operator$>$()}{operator>()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+bool \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::operator$>$ (\begin{DoxyParamCaption}\item[{const \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{rhs }\end{DoxyParamCaption}) const}
+
+Overloading operator $>$ and comparing lowerbounds of two Branching\+Nodes. Used by priority\+\_\+queue 
+\begin{DoxyParams}{Parameters}
+{\em rhs} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if $>$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a77e84d1567c62587742790f2c985a7df}\label{classTSP_1_1BranchingNode_a77e84d1567c62587742790f2c985a7df}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!push\+\_\+forbidden@{push\+\_\+forbidden}}
+\index{push\+\_\+forbidden@{push\+\_\+forbidden}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{push\+\_\+forbidden()}{push\_forbidden()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+bool \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::push\+\_\+forbidden (\begin{DoxyParamCaption}\item[{Edge\+Id}]{e }\end{DoxyParamCaption})}
+
+pushes both, e and reverse edge of e to forbidden 
+\begin{DoxyParams}{Parameters}
+{\em e} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+false, if it was already forbidden 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_ab38488f897b8a3015f31803f2aec5115}\label{classTSP_1_1BranchingNode_ab38488f897b8a3015f31803f2aec5115}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!push\+\_\+required@{push\+\_\+required}}
+\index{push\+\_\+required@{push\+\_\+required}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{push\+\_\+required()}{push\_required()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+bool \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::push\+\_\+required (\begin{DoxyParamCaption}\item[{Edge\+Id}]{e }\end{DoxyParamCaption})}
+
+pushes both, e and reverse edge of e to required 
+\begin{DoxyParams}{Parameters}
+{\em e} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+false, if it was already in required 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a5f04fd8afc44fa3965d87e0e28fa01c0}\label{classTSP_1_1BranchingNode_a5f04fd8afc44fa3965d87e0e28fa01c0}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!reverse\+\_\+edge@{reverse\+\_\+edge}}
+\index{reverse\+\_\+edge@{reverse\+\_\+edge}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{reverse\+\_\+edge()}{reverse\_edge()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+Edge\+Id \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::reverse\+\_\+edge (\begin{DoxyParamCaption}\item[{Edge\+Id}]{e,  }\item[{size\+\_\+type}]{n }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+For an Edge\+Id e corresponding to an edge (i,j) it returns the edge corresponding to the edge (j,i) 
+\begin{DoxyParams}{Parameters}
+{\em e} & $ =(i,j)$ \\
+\hline
+{\em n} & size on the tsp instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$(j,i) = e' $ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTSP_1_1BranchingNode_a44790ceabe450e8cc5fc718fbd3780da}\label{classTSP_1_1BranchingNode_a44790ceabe450e8cc5fc718fbd3780da}} 
+\index{T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}!tworegular@{tworegular}}
+\index{tworegular@{tworegular}!T\+S\+P\+::\+Branching\+Node@{T\+S\+P\+::\+Branching\+Node}}
+\subsubsection{\texorpdfstring{tworegular()}{tworegular()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+bool \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::tworegular (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+checks if the current tree is 2-\/regular \begin{DoxyReturn}{Returns}
+true, if T 2-\/regular 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/\hyperlink{tsp_8hpp}{tsp.\+hpp}\item 
+header/\hyperlink{tsp__impl_8hpp}{tsp\+\_\+impl.\+hpp}\end{DoxyCompactItemize}

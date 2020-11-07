@@ -1,0 +1,122 @@
+\begin{theindex}
+
+  \item {add\+\_\+edge}
+    \subitem {T\+S\+P\+::\+One\+Tree}, \hyperpage{21}
+  \item {add\+\_\+forbidden}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{13}
+  \item {add\+\_\+neighbor}
+    \subitem {T\+S\+P\+::\+Node}, \hyperpage{20}
+  \item {add\+\_\+required}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{14}
+  \item {admit}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{14}
+
+  \indexspace
+
+  \item {Branching\+Node}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{12, 13}
+
+  \indexspace
+
+  \item {compute\+\_\+minimal\+\_\+1\+\_\+tree}
+    \subitem {T\+SP}, \hyperpage{7}
+  \item {compute\+\_\+optimal\+\_\+tour}
+    \subitem {T\+S\+P\+::\+Instance}, \hyperpage{18}
+
+  \indexspace
+
+  \item {degree}
+    \subitem {T\+S\+P\+::\+Node}, \hyperpage{20}
+  \item {distance}
+    \subitem {T\+S\+P\+::\+Instance}, \hyperpage{18}
+
+  \indexspace
+
+  \item {forbid}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{14}
+
+  \indexspace
+
+  \item {header/graph.\+hpp}, \hyperpage{23}
+  \item {header/tree.\+hpp}, \hyperpage{24}
+  \item {header/tsp.\+hpp}, \hyperpage{24}
+  \item {header/tsp\+\_\+impl.\+hpp}, \hyperpage{25}
+  \item {Held\+\_\+\+Karp}
+    \subitem {T\+SP}, \hyperpage{8}
+
+  \indexspace
+
+  \item {Instance}, \hyperpage{17}
+  \item {is\+\_\+forbidden}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{15}
+  \item {is\+\_\+required}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{15}
+
+  \indexspace
+
+  \item {neighbors}
+    \subitem {T\+S\+P\+::\+Node}, \hyperpage{20}
+
+  \indexspace
+
+  \item {One\+Tree}
+    \subitem {T\+S\+P\+::\+One\+Tree}, \hyperpage{21}
+  \item {operator$>$}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{15}
+
+  \indexspace
+
+  \item {print\+\_\+optimal\+\_\+tour}
+    \subitem {T\+S\+P\+::\+Instance}, \hyperpage{19}
+  \item {push\+\_\+forbidden}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{16}
+  \item {push\+\_\+required}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{16}
+
+  \indexspace
+
+  \item {reverse\+\_\+edge}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{16}
+
+  \indexspace
+
+  \item {src/graph.\+cpp}, \hyperpage{26}
+  \item {src/main.\+cpp}, \hyperpage{26}
+
+  \indexspace
+
+  \item {T\+S\+P\+::\+Branching\+Node}
+    \subitem {add\+\_\+forbidden}, \hyperpage{13}
+    \subitem {add\+\_\+required}, \hyperpage{14}
+    \subitem {admit}, \hyperpage{14}
+    \subitem {Branching\+Node}, \hyperpage{12, 13}
+    \subitem {forbid}, \hyperpage{14}
+    \subitem {is\+\_\+forbidden}, \hyperpage{15}
+    \subitem {is\+\_\+required}, \hyperpage{15}
+    \subitem {operator$>$}, \hyperpage{15}
+    \subitem {push\+\_\+forbidden}, \hyperpage{16}
+    \subitem {push\+\_\+required}, \hyperpage{16}
+    \subitem {reverse\+\_\+edge}, \hyperpage{16}
+    \subitem {tworegular}, \hyperpage{17}
+  \item {T\+S\+P\+::\+Branching\+Node$<$ coord\+\_\+type, dist\+\_\+type $>$}, 
+		\hyperpage{11}
+  \item {T\+S\+P\+::\+Instance}
+    \subitem {compute\+\_\+optimal\+\_\+tour}, \hyperpage{18}
+    \subitem {distance}, \hyperpage{18}
+    \subitem {print\+\_\+optimal\+\_\+tour}, \hyperpage{19}
+  \item {T\+S\+P\+::\+Instance$<$ coord\+\_\+type, dist\+\_\+type $>$}, 
+		\hyperpage{17}
+  \item {T\+S\+P\+::\+Node}, \hyperpage{19}
+    \subitem {add\+\_\+neighbor}, \hyperpage{20}
+    \subitem {degree}, \hyperpage{20}
+    \subitem {neighbors}, \hyperpage{20}
+  \item {T\+S\+P\+::\+One\+Tree}, \hyperpage{21}
+    \subitem {add\+\_\+edge}, \hyperpage{21}
+    \subitem {One\+Tree}, \hyperpage{21}
+  \item {T\+SP}, \hyperpage{7}
+    \subitem {compute\+\_\+minimal\+\_\+1\+\_\+tree}, \hyperpage{7}
+    \subitem {Held\+\_\+\+Karp}, \hyperpage{8}
+  \item {tworegular}
+    \subitem {T\+S\+P\+::\+Branching\+Node}, \hyperpage{17}
+
+\end{theindex}

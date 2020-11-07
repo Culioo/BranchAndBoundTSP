@@ -119,7 +119,6 @@ void compute_minimal_1_tree(TSP::OneTree &tree,
     tree.add_edge(0, smallest1);
 }
 
-
 /**
  * computes the Held-Karp lower bound
  * @tparam coord_type

@@ -1,0 +1,63 @@
+\hypertarget{classTSP_1_1OneTree}{}\section{T\+SP\+:\+:One\+Tree Class Reference}
+\label{classTSP_1_1OneTree}\index{T\+S\+P\+::\+One\+Tree@{T\+S\+P\+::\+One\+Tree}}
+
+
+{\ttfamily \#include $<$tree.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classTSP_1_1OneTree_aa95506a53932cfbb19affc645e3e8f93}{One\+Tree} (size\+\_\+t size)
+\item 
+void \hyperlink{classTSP_1_1OneTree_a1fbf0dcc64bb859a04cd9d04298d8608}{add\+\_\+edge} (Node\+Id i, Node\+Id j)
+\item 
+\mbox{\Hypertarget{classTSP_1_1OneTree_a300fb023cb38596fb8b1b239b73177f6}\label{classTSP_1_1OneTree_a300fb023cb38596fb8b1b239b73177f6}} 
+const size\+\_\+type \& {\bfseries get\+\_\+num\+\_\+edges} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1OneTree_aba5dd73526b09bef62ea76da2eccf173}\label{classTSP_1_1OneTree_aba5dd73526b09bef62ea76da2eccf173}} 
+const std\+::vector$<$ Edge\+Id $>$ \& {\bfseries get\+\_\+edges} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1OneTree_ae7205c7ed74ea5fe2542ffa1dbaf3a3d}\label{classTSP_1_1OneTree_ae7205c7ed74ea5fe2542ffa1dbaf3a3d}} 
+const std\+::vector$<$ \hyperlink{classTSP_1_1Node}{Node} $>$ \& {\bfseries get\+\_\+nodes} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1OneTree_afed2f07e835853ba59bb37bd65991f44}\label{classTSP_1_1OneTree_afed2f07e835853ba59bb37bd65991f44}} 
+const \hyperlink{classTSP_1_1Node}{Node} \& {\bfseries get\+\_\+node} (Node\+Id id) const
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+1-\/tree implementation as a container for Nodes and meta information 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classTSP_1_1OneTree_aa95506a53932cfbb19affc645e3e8f93}\label{classTSP_1_1OneTree_aa95506a53932cfbb19affc645e3e8f93}} 
+\index{T\+S\+P\+::\+One\+Tree@{T\+S\+P\+::\+One\+Tree}!One\+Tree@{One\+Tree}}
+\index{One\+Tree@{One\+Tree}!T\+S\+P\+::\+One\+Tree@{T\+S\+P\+::\+One\+Tree}}
+\subsubsection{\texorpdfstring{One\+Tree()}{OneTree()}}
+{\footnotesize\ttfamily T\+S\+P\+::\+One\+Tree\+::\+One\+Tree (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Only constructor. Initializes the meta information and edge vector 
+\begin{DoxyParams}{Parameters}
+{\em size} & size of the tree in terms of Nodes \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classTSP_1_1OneTree_a1fbf0dcc64bb859a04cd9d04298d8608}\label{classTSP_1_1OneTree_a1fbf0dcc64bb859a04cd9d04298d8608}} 
+\index{T\+S\+P\+::\+One\+Tree@{T\+S\+P\+::\+One\+Tree}!add\+\_\+edge@{add\+\_\+edge}}
+\index{add\+\_\+edge@{add\+\_\+edge}!T\+S\+P\+::\+One\+Tree@{T\+S\+P\+::\+One\+Tree}}
+\subsubsection{\texorpdfstring{add\+\_\+edge()}{add\_edge()}}
+{\footnotesize\ttfamily void T\+S\+P\+::\+One\+Tree\+::add\+\_\+edge (\begin{DoxyParamCaption}\item[{Node\+Id}]{i,  }\item[{Node\+Id}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Adding an edge by their Node\+Ids. Requires the to\+\_\+\+Edge functionality from
+\begin{DoxyParams}{Parameters}
+{\em i} & first node \\
+\hline
+{\em j} & second node \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+header/\hyperlink{tree_8hpp}{tree.\+hpp}\end{DoxyCompactItemize}

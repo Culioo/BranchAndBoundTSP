@@ -1,0 +1,91 @@
+\hypertarget{classTSP_1_1Instance}{}\section{T\+SP\+:\+:Instance$<$ coord\+\_\+type, dist\+\_\+type $>$ Class Template Reference}
+\label{classTSP_1_1Instance}\index{T\+S\+P\+::\+Instance$<$ coord\+\_\+type, dist\+\_\+type $>$@{T\+S\+P\+::\+Instance$<$ coord\+\_\+type, dist\+\_\+type $>$}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classTSP_1_1Instance_a260e73b792f15149ab5b4bb91c37dd60}\label{classTSP_1_1Instance_a260e73b792f15149ab5b4bb91c37dd60}} 
+{\bfseries Instance} (const std\+::string \&filename)
+\item 
+dist\+\_\+type \hyperlink{classTSP_1_1Instance_a8d0deb55c708cc6e926b32fc298d60d1}{distance} (coord\+\_\+type x1, coord\+\_\+type y1, coord\+\_\+type x2, coord\+\_\+type y2)
+\item 
+void \hyperlink{classTSP_1_1Instance_a306e8ef90273445f42555d338887a9ed}{compute\+\_\+optimal\+\_\+tour} ()
+\item 
+void \hyperlink{classTSP_1_1Instance_a6b1774de9fe5dcdaf2da3d9ff7f0d806}{print\+\_\+optimal\+\_\+tour} (const std\+::string \&filename)
+\item 
+\mbox{\Hypertarget{classTSP_1_1Instance_a55c16cbd3fc6c29877f8be8140e49214}\label{classTSP_1_1Instance_a55c16cbd3fc6c29877f8be8140e49214}} 
+size\+\_\+type {\bfseries size} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1Instance_a48b756b05b4b1af3e82e337d419eb260}\label{classTSP_1_1Instance_a48b756b05b4b1af3e82e337d419eb260}} 
+size\+\_\+type {\bfseries num\+\_\+edges} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1Instance_a4781fd73dd099f14347a1d069ef63080}\label{classTSP_1_1Instance_a4781fd73dd099f14347a1d069ef63080}} 
+dist\+\_\+type {\bfseries weight} (Edge\+Id id) const
+\item 
+\mbox{\Hypertarget{classTSP_1_1Instance_af3cc1fece6c6e01b866115d633c5e38b}\label{classTSP_1_1Instance_af3cc1fece6c6e01b866115d633c5e38b}} 
+const std\+::vector$<$ dist\+\_\+type $>$ \& {\bfseries weights} () const
+\item 
+\mbox{\Hypertarget{classTSP_1_1Instance_a185fb93c0334531701d1bd9109a19143}\label{classTSP_1_1Instance_a185fb93c0334531701d1bd9109a19143}} 
+const dist\+\_\+type \& {\bfseries length} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class coord\+\_\+type, class dist\+\_\+type$>$\newline
+class T\+S\+P\+::\+Instance$<$ coord\+\_\+type, dist\+\_\+type $>$}
+
+edge weights and reads the instance from a file in T\+S\+P\+L\+IB format 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em coord\+\_\+type} & Container in which the Coordinates are given. Assumably double \\
+\hline
+{\em dist\+\_\+type} & Container in which the distances are given. Assumably double \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classTSP_1_1Instance_a306e8ef90273445f42555d338887a9ed}\label{classTSP_1_1Instance_a306e8ef90273445f42555d338887a9ed}} 
+\index{T\+S\+P\+::\+Instance@{T\+S\+P\+::\+Instance}!compute\+\_\+optimal\+\_\+tour@{compute\+\_\+optimal\+\_\+tour}}
+\index{compute\+\_\+optimal\+\_\+tour@{compute\+\_\+optimal\+\_\+tour}!T\+S\+P\+::\+Instance@{T\+S\+P\+::\+Instance}}
+\subsubsection{\texorpdfstring{compute\+\_\+optimal\+\_\+tour()}{compute\_optimal\_tour()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+void Instance\+::compute\+\_\+optimal\+\_\+tour (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Computes and optimal tour on this \hyperlink{classTSP_1_1Instance}{Instance} and saves it as Edge\+Ids in \+\_\+tour \mbox{\Hypertarget{classTSP_1_1Instance_a8d0deb55c708cc6e926b32fc298d60d1}\label{classTSP_1_1Instance_a8d0deb55c708cc6e926b32fc298d60d1}} 
+\index{T\+S\+P\+::\+Instance@{T\+S\+P\+::\+Instance}!distance@{distance}}
+\index{distance@{distance}!T\+S\+P\+::\+Instance@{T\+S\+P\+::\+Instance}}
+\subsubsection{\texorpdfstring{distance()}{distance()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type, class dist\+\_\+type$>$ \\
+dist\+\_\+type \hyperlink{classTSP_1_1Instance}{T\+S\+P\+::\+Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$\+::distance (\begin{DoxyParamCaption}\item[{coord\+\_\+type}]{x1,  }\item[{coord\+\_\+type}]{y1,  }\item[{coord\+\_\+type}]{x2,  }\item[{coord\+\_\+type}]{y2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Distance function in the \hyperlink{namespaceTSP}{T\+SP} \hyperlink{classTSP_1_1Instance}{Instance}. Could be also made private, since it\textquotesingle{}s only there at init point. 
+\begin{DoxyParams}{Parameters}
+{\em x1} & \\
+\hline
+{\em y1} & \\
+\hline
+{\em x2} & \\
+\hline
+{\em y2} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+rounded $ \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classTSP_1_1Instance_a6b1774de9fe5dcdaf2da3d9ff7f0d806}\label{classTSP_1_1Instance_a6b1774de9fe5dcdaf2da3d9ff7f0d806}} 
+\index{T\+S\+P\+::\+Instance@{T\+S\+P\+::\+Instance}!print\+\_\+optimal\+\_\+tour@{print\+\_\+optimal\+\_\+tour}}
+\index{print\+\_\+optimal\+\_\+tour@{print\+\_\+optimal\+\_\+tour}!T\+S\+P\+::\+Instance@{T\+S\+P\+::\+Instance}}
+\subsubsection{\texorpdfstring{print\+\_\+optimal\+\_\+tour()}{print\_optimal\_tour()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+void Instance\+::print\+\_\+optimal\+\_\+tour (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+
+Output the optimal tour into a file by T\+S\+P\+L\+IB rules 
+\begin{DoxyParams}{Parameters}
+{\em filename} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+header/\hyperlink{tsp_8hpp}{tsp.\+hpp}\item 
+header/\hyperlink{tsp__impl_8hpp}{tsp\+\_\+impl.\+hpp}\end{DoxyCompactItemize}

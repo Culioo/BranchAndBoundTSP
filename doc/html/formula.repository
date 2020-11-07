@@ -1,0 +1,6 @@
+\form#0:$ \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$
+\form#1:$ F := F \cup e_1 $
+\form#2:$ R := R \cup {e_1} F := F \cup {e_2} $
+\form#3:$ R := R \cup {e_1 } \cup {e_2}$
+\form#4:$ =(i,j)$
+\form#5:$(j,i) = e' $

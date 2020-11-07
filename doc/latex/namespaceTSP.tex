@@ -1,0 +1,96 @@
+\hypertarget{namespaceTSP}{}\section{T\+SP Namespace Reference}
+\label{namespaceTSP}\index{T\+SP@{T\+SP}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}
+\item 
+class \hyperlink{classTSP_1_1Instance}{Instance}
+\item 
+class \hyperlink{classTSP_1_1Node}{Node}
+\begin{DoxyCompactList}\small\item\em A {\ttfamily \hyperlink{classTSP_1_1Node}{Node}} stores an array of neighbors (via their ids). \end{DoxyCompactList}\item 
+class \hyperlink{classTSP_1_1OneTree}{One\+Tree}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespaceTSP_a22c299cf14e03937cb4063ed1caa4320}\label{namespaceTSP_a22c299cf14e03937cb4063ed1caa4320}} 
+using {\bfseries size\+\_\+type} = std\+::size\+\_\+t
+\item 
+\mbox{\Hypertarget{namespaceTSP_afee6b1f23d95a5d2bd45d7b5eba2ffb0}\label{namespaceTSP_afee6b1f23d95a5d2bd45d7b5eba2ffb0}} 
+using {\bfseries Node\+Id} = size\+\_\+type
+\item 
+\mbox{\Hypertarget{namespaceTSP_a6bfafd5061695c2f67ce234440bf6b15}\label{namespaceTSP_a6bfafd5061695c2f67ce234440bf6b15}} 
+using {\bfseries T\+S\+Plib\+Id} = size\+\_\+type
+\item 
+\mbox{\Hypertarget{namespaceTSP_a3309ca2acc192768a0309bc5d7b2d101}\label{namespaceTSP_a3309ca2acc192768a0309bc5d7b2d101}} 
+using {\bfseries Edge\+Id} = size\+\_\+type
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class coord\+\_\+type , class dist\+\_\+type $>$ }\\void \hyperlink{namespaceTSP_a99deb3994481658afb2f3d6fc4a56ac8}{compute\+\_\+minimal\+\_\+1\+\_\+tree} (\hyperlink{classTSP_1_1OneTree}{T\+S\+P\+::\+One\+Tree} \&tree, const std\+::vector$<$ double $>$ \&lambda, const \hyperlink{classTSP_1_1Instance}{T\+S\+P\+::\+Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&tsp, const \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&B\+Node)
+\item 
+{\footnotesize template$<$class coord\+\_\+type , class dist\+\_\+type $>$ }\\dist\+\_\+type \hyperlink{namespaceTSP_aa02b5d2fd460500a7e1e98b02da33813}{Held\+\_\+\+Karp} (const \hyperlink{classTSP_1_1Instance}{T\+S\+P\+::\+Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&tsp, std\+::vector$<$ double $>$ \&lambda, \hyperlink{classTSP_1_1OneTree}{T\+S\+P\+::\+One\+Tree} \&tree, const \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&bn, bool root=false)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+defines elements, methods and classes within the Travelling Salesman Context 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespaceTSP_a99deb3994481658afb2f3d6fc4a56ac8}\label{namespaceTSP_a99deb3994481658afb2f3d6fc4a56ac8}} 
+\index{T\+SP@{T\+SP}!compute\+\_\+minimal\+\_\+1\+\_\+tree@{compute\+\_\+minimal\+\_\+1\+\_\+tree}}
+\index{compute\+\_\+minimal\+\_\+1\+\_\+tree@{compute\+\_\+minimal\+\_\+1\+\_\+tree}!T\+SP@{T\+SP}}
+\subsubsection{\texorpdfstring{compute\+\_\+minimal\+\_\+1\+\_\+tree()}{compute\_minimal\_1\_tree()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+void T\+S\+P\+::compute\+\_\+minimal\+\_\+1\+\_\+tree (\begin{DoxyParamCaption}\item[{\hyperlink{classTSP_1_1OneTree}{T\+S\+P\+::\+One\+Tree} \&}]{tree,  }\item[{const std\+::vector$<$ double $>$ \&}]{lambda,  }\item[{const \hyperlink{classTSP_1_1Instance}{T\+S\+P\+::\+Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{tsp,  }\item[{const \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{B\+Node }\end{DoxyParamCaption})}
+
+computes a minimum-\/1-\/tree for a given \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em coord\+\_\+type} & \\
+\hline
+{\em dist\+\_\+type} & \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em tree} & space to save the optimal tree \\
+\hline
+{\em lambda} & if we are in the root node, we\textquotesingle{}ll save our holy lambda here, else it\textquotesingle{}s just the root lambda \\
+\hline
+{\em tsp} & The \hyperlink{namespaceTSP}{T\+SP} \hyperlink{classTSP_1_1Instance}{Instance} \\
+\hline
+{\em B\+Node} & the correspnding \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceTSP_aa02b5d2fd460500a7e1e98b02da33813}\label{namespaceTSP_aa02b5d2fd460500a7e1e98b02da33813}} 
+\index{T\+SP@{T\+SP}!Held\+\_\+\+Karp@{Held\+\_\+\+Karp}}
+\index{Held\+\_\+\+Karp@{Held\+\_\+\+Karp}!T\+SP@{T\+SP}}
+\subsubsection{\texorpdfstring{Held\+\_\+\+Karp()}{Held\_Karp()}}
+{\footnotesize\ttfamily template$<$class coord\+\_\+type , class dist\+\_\+type $>$ \\
+dist\+\_\+type T\+S\+P\+::\+Held\+\_\+\+Karp (\begin{DoxyParamCaption}\item[{const \hyperlink{classTSP_1_1Instance}{T\+S\+P\+::\+Instance}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{tsp,  }\item[{std\+::vector$<$ double $>$ \&}]{lambda,  }\item[{\hyperlink{classTSP_1_1OneTree}{T\+S\+P\+::\+One\+Tree} \&}]{tree,  }\item[{const \hyperlink{classTSP_1_1BranchingNode}{T\+S\+P\+::\+Branching\+Node}$<$ coord\+\_\+type, dist\+\_\+type $>$ \&}]{bn,  }\item[{bool}]{root = {\ttfamily false} }\end{DoxyParamCaption})}
+
+computes the Held-\/\+Karp lower bound 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em coord\+\_\+type} & \\
+\hline
+{\em dist\+\_\+type} & \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em tsp} & The \hyperlink{namespaceTSP}{T\+SP} \hyperlink{classTSP_1_1Instance}{Instance} \\
+\hline
+{\em lambda} & lambda set by root \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} (or where to set for not \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node}) \\
+\hline
+{\em tree} & container for tree computation \\
+\hline
+{\em bn} & current \hyperlink{classTSP_1_1BranchingNode}{Branching\+Node} \\
+\hline
+{\em root} & true, if we are in the root of our B\textquotesingle{}n\textquotesingle{}B tree \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
